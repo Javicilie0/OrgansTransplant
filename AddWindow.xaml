@@ -1,0 +1,87 @@
+﻿<Window x:Class="OrgnTransplant.AddWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Регистрация на донор" Height="650" Width="500" WindowStartupLocation="CenterOwner">
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <Grid Margin="20">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <StackPanel Grid.Row="0" Margin="0,0,0,10">
+                <TextBlock Text="Регистрация на донор" FontSize="22" FontWeight="Bold" Margin="0,0,0,20"/>
+            </StackPanel>
+            <StackPanel Grid.Row="1" VerticalAlignment="Top" HorizontalAlignment="Stretch" >
+                <!-- Лична информация -->
+                <TextBlock Text="Лична информация" FontWeight="Bold" Margin="0,10,0,5"/>
+                <TextBlock Text="Три имена"/>
+                <TextBox x:Name="FullNameBox" Margin="0,0,0,8"/>
+                <TextBlock Text="Дата на раждане"/>
+                <DatePicker x:Name="DOBPicker" Width="200" Margin="0,0,0,8" SelectedDateFormat="Short" Language="bg-BG"/>
+                <TextBlock Text="Пол"/>
+                <ComboBox x:Name="GenderBox" Width="120" Margin="0,0,0,8">
+                    <ComboBoxItem Content="Мъж"/>
+                    <ComboBoxItem Content="Жена"/>
+                    <ComboBoxItem Content="Друго"/>
+                </ComboBox>
+                <TextBlock Text="ЕГН/Личен номер"/>
+                <TextBox x:Name="NationalIdBox" Margin="0,0,0,8"/>
+                <TextBlock Text="Телефон"/>
+                <TextBox x:Name="PhoneBox" Margin="0,0,0,8"/>
+                <TextBlock Text="Имейл"/>
+                <TextBox x:Name="EmailBox" Margin="0,0,0,8"/>
+                <TextBlock Text="Адрес"/>
+                <TextBox x:Name="AddressBox" Margin="0,0,0,8"/>
+
+                <!-- Медицинска информация -->
+                <TextBlock Text="Медицинска информация" FontWeight="Bold" Margin="0,15,0,5"/>
+                <TextBlock Text="Кръвна група"/>
+                <ComboBox x:Name="BloodTypeBox" Width="120" Margin="0,0,0,8">
+                    <ComboBoxItem Content="A"/>
+                    <ComboBoxItem Content="B"/>
+                    <ComboBoxItem Content="AB"/>
+                    <ComboBoxItem Content="O"/>
+                </ComboBox>
+                <TextBlock Text="Резус фактор"/>
+                <ComboBox x:Name="RhFactorBox" Width="120" Margin="0,0,0,8">
+                    <ComboBoxItem Content="Положителен"/>
+                    <ComboBoxItem Content="Отрицателен"/>
+                </ComboBox>
+                <TextBlock Text="Известни алергии"/>
+                <TextBox x:Name="AllergiesBox" Margin="0,0,0,8"/>
+                <TextBlock Text="Медицински състояния"/>
+                <TextBox x:Name="ConditionsBox" Margin="0,0,0,8"/>
+                <TextBlock Text="Текущи медикаменти"/>
+                <TextBox x:Name="MedicationsBox" Margin="0,0,0,8"/>
+                <TextBlock Text="Скорошни операции/хоспитализации"/>
+                <TextBox x:Name="SurgeriesBox" Margin="0,0,0,8"/>
+                <TextBlock Text="Инфекциозни заболявания"/>
+                <ComboBox x:Name="InfectiousBox" Margin="0,0,0,8">
+                    <ComboBoxItem Content="Няма"/>
+                    <ComboBoxItem Content="HIV"/>
+                    <ComboBoxItem Content="Хепатит B"/>
+                    <ComboBoxItem Content="Хепатит C"/>
+                    <ComboBoxItem Content="Друго"/>
+                </ComboBox>
+                <TextBlock Text="Органи за донорство:" Margin="0,10,0,2"/>
+                <WrapPanel x:Name="OrganPanel">
+                    <CheckBox Content="Сърце" Margin="0,0,10,0"/>
+                    <CheckBox Content="Бял дроб" Margin="0,0,10,0"/>
+                    <CheckBox Content="Черен дроб" Margin="0,0,10,0"/>
+                    <CheckBox Content="Бъбрек" Margin="0,0,10,0"/>
+                    <CheckBox Content="Панкреас" Margin="0,0,10,0"/>
+                    <CheckBox Content="Черен дроб" Margin="0,0,10,0"/>
+                    <CheckBox Content="Стомах" Margin="0,0,10,0"/>
+                    <CheckBox Content="Тимус" Margin="0,0,10,0"/>
+                    <CheckBox Content="Артерия" Margin="0,0,10,0"/>
+                </WrapPanel>
+                <!-- ... (continue with consent and legal, also in Bulgarian) ... -->
+            </StackPanel>
+            <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,20,0,0">
+                <Button Content="Запази" Width="100" Click="Save_Click" Margin="0,0,10,0"/>
+                <Button Content="Отказ" Click="Close_Click" Width="100"/>
+            </StackPanel>
+        </Grid>
+    </ScrollViewer>
+</Window>

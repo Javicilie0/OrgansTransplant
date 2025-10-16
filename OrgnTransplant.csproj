@@ -1,0 +1,43 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UseWPF>true</UseWPF>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Resources\icons\Abdomen\Intestine.png" />
+    <None Remove="Resources\icons\Abdomen\Kidney.png" />
+    <None Remove="Resources\icons\Abdomen\Liver.png" />
+    <None Remove="Resources\icons\Abdomen\Pancreas.png" />
+    <None Remove="Resources\icons\Abdomen\Stomach.png" />
+    <None Remove="Resources\icons\Chest\Heart.png" />
+    <None Remove="Resources\icons\Chest\lung.png" />
+    <None Remove="Resources\icons\Chest\Pulmonary Artery.png" />
+    <None Remove="Resources\icons\Chest\Thymus.png" />
+    <None Remove="Resources\icons\Tissues, cells and fluids\cornea_5793544__1_-removebg-preview.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MySql.Data" Version="9.4.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Resources\icons\Abdomen\Intestine.png" />
+    <Resource Include="Resources\icons\Abdomen\Kidney.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\icons\Abdomen\Liver.png" />
+    <Resource Include="Resources\icons\Abdomen\Pancreas.png" />
+    <Resource Include="Resources\icons\Abdomen\Stomach.png" />
+    <Resource Include="Resources\icons\Chest\Heart.png" />
+    <Resource Include="Resources\icons\Chest\lung.png" />
+    <Resource Include="Resources\icons\Chest\Pulmonary Artery.png" />
+    <Resource Include="Resources\icons\Chest\Thymus.png" />
+    <Resource Include="Resources\icons\Tissues, cells and fluids\cornea_5793544__1_-removebg-preview.png" />
+  </ItemGroup>
+
+</Project>

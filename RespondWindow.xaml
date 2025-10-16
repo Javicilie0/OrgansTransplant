@@ -1,0 +1,112 @@
+<Window x:Class="OrgnTransplant.RespondWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Отговор на заявка" Height="500" Width="600"
+        WindowStartupLocation="CenterScreen"
+        Background="#F5F7FA"
+        ResizeMode="NoResize">
+
+    <Window.Resources>
+        <!-- Стил за бутони -->
+        <Style x:Key="ModernButton" TargetType="Button">
+            <Setter Property="Background" Value="#3498DB"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Padding" Value="25,12"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}"
+                                CornerRadius="6"
+                                Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#2980B9"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <!-- Стил за отказ бутон -->
+        <Style x:Key="CancelButton" TargetType="Button" BasedOn="{StaticResource ModernButton}">
+            <Setter Property="Background" Value="#95A5A6"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#7F8C8D"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <!-- Стил за радио бутони -->
+        <Style x:Key="ModernRadioButton" TargetType="RadioButton">
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Foreground" Value="#34495E"/>
+            <Setter Property="Margin" Value="0,8,0,0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+        </Style>
+    </Window.Resources>
+
+    <Grid Margin="30">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Хедър -->
+        <Border Grid.Row="0" Background="White" CornerRadius="10" Padding="20" Margin="0,0,0,20">
+            <StackPanel>
+                <TextBlock x:Name="TitleText" Text="✅ Приемане на заявка" FontSize="24" FontWeight="Bold" Foreground="#2C3E50"/>
+                <TextBlock x:Name="OrganInfoText" Text="" FontSize="14" Foreground="#7F8C8D" Margin="0,8,0,0"/>
+            </StackPanel>
+        </Border>
+
+        <!-- Форма -->
+        <Border Grid.Row="1" Background="White" CornerRadius="10" Padding="25">
+            <ScrollViewer VerticalScrollBarVisibility="Auto">
+                <StackPanel>
+                    <!-- Опции за доставка -->
+                    <TextBlock Text="Как ще бъде предоставен органът?" FontSize="16" FontWeight="SemiBold" Foreground="#2C3E50"/>
+
+                    <RadioButton x:Name="WithDriverRadio" Content="🚗 С шофьор - ще предоставим транспорт"
+                                 GroupName="DeliveryOptions" Style="{StaticResource ModernRadioButton}" IsChecked="True"/>
+
+                    <RadioButton x:Name="PickupRequiredRadio" Content="🚶 Необходимо е вземане - лично трябва да се дойде"
+                                 GroupName="DeliveryOptions" Style="{StaticResource ModernRadioButton}"/>
+
+                    <!-- Съобщение -->
+                    <TextBlock Text="Допълнителна информация:" FontSize="16" FontWeight="SemiBold" Foreground="#2C3E50" Margin="0,25,0,0"/>
+
+                    <TextBox x:Name="ResponseTextBox"
+                             Height="120"
+                             TextWrapping="Wrap"
+                             AcceptsReturn="True"
+                             VerticalScrollBarVisibility="Auto"
+                             FontSize="14"
+                             Padding="12"
+                             Margin="0,10,0,0"
+                             BorderBrush="#BDC3C7"
+                             BorderThickness="1"/>
+
+                    <TextBlock Text="(Опционално - въведете допълнителна информация, инструкции или забележки)"
+                               FontSize="12"
+                               Foreground="#95A5A6"
+                               Margin="0,5,0,0"/>
+                </StackPanel>
+            </ScrollViewer>
+        </Border>
+
+        <!-- Бутони -->
+        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,20,0,0">
+            <Button Content="Отказ" Style="{StaticResource CancelButton}" Width="120" Click="Cancel_Click"/>
+            <Button Content="Изпрати" Style="{StaticResource ModernButton}" Width="120" Margin="15,0,0,0" Click="Send_Click"/>
+        </StackPanel>
+    </Grid>
+</Window>
