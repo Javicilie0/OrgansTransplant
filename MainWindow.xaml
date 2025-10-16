@@ -591,7 +591,7 @@
                             <DataGridTextColumn Header="Кръвна" Binding="{Binding BloodTypeDisplay}" Width="80"/>
                             <DataGridTextColumn Header="Болница" Binding="{Binding Hospital}" Width="*"/>
                             <DataGridTextColumn Header="Органи" Binding="{Binding OrgansForDonation}" Width="180"/>
-                            <DataGridTextColumn Header="Дата" Binding="{Binding RegistrationDate, StringFormat='dd.MM.yyyy'}" Width="100"/>
+                            <DataGridTextColumn Header="Дата на раждане" Binding="{Binding DateOfBirth, StringFormat='dd.MM.yyyy'}" Width="120"/>
 
                             <DataGridTemplateColumn Header="Действия" Width="150">
                                 <DataGridTemplateColumn.CellTemplate>

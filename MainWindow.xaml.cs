@@ -589,6 +589,6 @@ namespace OrgnTransplant
 
         public string Hospital => donor.Hospital;
         public string OrgansForDonation => donor.OrgansForDonation;
-        public DateTime RegistrationDate => donor.RegistrationDate;
+        public DateTime DateOfBirth => donor.DateOfBirth;
     }
 }
