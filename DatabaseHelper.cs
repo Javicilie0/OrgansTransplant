@@ -220,6 +220,53 @@ namespace OrgnTransplant
             }
         }
 
+        // Get a single donor by ID
+        public static Donor GetDonorById(int donorId)
+        {
+            try
+            {
+                using (MySqlConnection conn = new MySqlConnection(connectionString))
+                {
+                    conn.Open();
+
+                    string query = "SELECT * FROM Donors WHERE id = @id";
+
+                    using (MySqlCommand cmd = new MySqlCommand(query, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@id", donorId);
+
+                        using (MySqlDataReader reader = cmd.ExecuteReader())
+                        {
+                            if (reader.Read())
+                            {
+                                return new Donor
+                                {
+                                    Id = reader.GetInt32("id"),
+                                    FullName = reader.GetString("full_name"),
+                                    Hospital = reader.IsDBNull(reader.GetOrdinal("hospital")) ? "" : reader.GetString("hospital"),
+                                    DateOfBirth = reader.GetDateTime("dob"),
+                                    Gender = reader.IsDBNull(reader.GetOrdinal("gender")) ? "" : reader.GetString("gender"),
+                                    NationalId = reader.GetString("national_id"),
+                                    Phone = reader.IsDBNull(reader.GetOrdinal("phone")) ? "" : reader.GetString("phone"),
+                                    Email = reader.IsDBNull(reader.GetOrdinal("email")) ? "" : reader.GetString("email"),
+                                    Address = reader.IsDBNull(reader.GetOrdinal("address")) ? "" : reader.GetString("address"),
+                                    BloodType = reader.IsDBNull(reader.GetOrdinal("blood_type")) ? "" : reader.GetString("blood_type"),
+                                    RhFactor = reader.IsDBNull(reader.GetOrdinal("rh_factor")) ? "" : reader.GetString("rh_factor"),
+                                    InfectiousDiseases = reader.IsDBNull(reader.GetOrdinal("infectious")) ? "" : reader.GetString("infectious"),
+                                    OrgansForDonation = reader.IsDBNull(reader.GetOrdinal("organs")) ? "" : reader.GetString("organs")
+                                };
+                            }
+                        }
+                    }
+                }
+                return null;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Грешка при четене на донор: {ex.Message}");
+            }
+        }
+
         // Delete a donor by ID
         public static bool DeleteDonor(int donorId)
         {

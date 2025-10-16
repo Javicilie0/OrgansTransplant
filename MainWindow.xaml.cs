@@ -366,13 +366,20 @@ namespace OrgnTransplant
         {
             if (sender is Button btn && btn.Tag != null)
             {
-                int donorId = Convert.ToInt32(btn.Tag);
-                // TODO: Open AddWindow in edit mode with donor data
-                MessageBox.Show($"Редактиране на донор с ID: {donorId}\n(Функционалността ще бъде добавена)",
-                    "Редактиране", MessageBoxButton.OK, MessageBoxImage.Information);
+                try
+                {
+                    int donorId = Convert.ToInt32(btn.Tag);
+                    AddWindow editWindow = new AddWindow(donorId);
+                    editWindow.ShowDialog();
 
-                // After edit, reload donors
-                LoadDonors();
+                    // After edit, reload donors
+                    LoadDonors();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Грешка при отваряне на прозорец за редакция: {ex.Message}",
+                        "Грешка", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
             }
         }
 

@@ -21,9 +21,14 @@ namespace OrgnTransplant
     /// </summary>
     public partial class AddWindow : Window
     {
+        private Donor _editingDonor;
+        private bool _isEditMode;
+
+        // Constructor for adding new donor
         public AddWindow()
         {
             InitializeComponent();
+            _isEditMode = false;
 
             // Add event handlers for real-time validation
             FullNameBox.TextChanged += FullNameBox_TextChanged;
@@ -32,6 +37,92 @@ namespace OrgnTransplant
             EmailBox.TextChanged += EmailBox_TextChanged;
             NationalIdBox.PreviewTextInput += NumericOnly_PreviewTextInput;
             PhoneBox.PreviewTextInput += NumericOnly_PreviewTextInput;
+
+            this.Title = "Регистрация на нов донор";
+        }
+
+        // Constructor for editing existing donor
+        public AddWindow(int donorId) : this()
+        {
+            _isEditMode = true;
+            this.Title = "Редактиране на донор";
+
+            // Load donor data
+            try
+            {
+                _editingDonor = DatabaseHelper.GetDonorById(donorId);
+                if (_editingDonor != null)
+                {
+                    LoadDonorData(_editingDonor);
+                }
+                else
+                {
+                    MessageBox.Show("Донорът не може да бъде намерен!", "Грешка",
+                        MessageBoxButton.OK, MessageBoxImage.Error);
+                    Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Грешка при зареждане на данни: {ex.Message}", "Грешка",
+                    MessageBoxButton.OK, MessageBoxImage.Error);
+                Close();
+            }
+        }
+
+        // Load donor data into form fields
+        private void LoadDonorData(Donor donor)
+        {
+            FullNameBox.Text = donor.FullName;
+            DOBPicker.SelectedDate = donor.DateOfBirth;
+            NationalIdBox.Text = donor.NationalId;
+            PhoneBox.Text = donor.Phone;
+            EmailBox.Text = donor.Email;
+            AddressBox.Text = donor.Address;
+            InfectiousBox.Text = donor.InfectiousDiseases;
+
+            // Set gender
+            foreach (ComboBoxItem item in GenderBox.Items)
+            {
+                if (item.Content.ToString() == donor.Gender)
+                {
+                    GenderBox.SelectedItem = item;
+                    break;
+                }
+            }
+
+            // Set blood type
+            foreach (ComboBoxItem item in BloodTypeBox.Items)
+            {
+                if (item.Content.ToString() == donor.BloodType)
+                {
+                    BloodTypeBox.SelectedItem = item;
+                    break;
+                }
+            }
+
+            // Set Rh factor
+            foreach (ComboBoxItem item in RhFactorBox.Items)
+            {
+                if (item.Content.ToString() == donor.RhFactor)
+                {
+                    RhFactorBox.SelectedItem = item;
+                    break;
+                }
+            }
+
+            // Set selected organs
+            if (!string.IsNullOrEmpty(donor.OrgansForDonation))
+            {
+                string[] organs = donor.OrgansForDonation.Split(new[] { ", ", "," }, StringSplitOptions.RemoveEmptyEntries);
+                foreach (CheckBox cb in OrganPanel.Children.OfType<CheckBox>())
+                {
+                    if (organs.Contains(cb.Content.ToString()))
+                    {
+                        cb.IsChecked = true;
+                    }
+                }
+            }
         }
 
 
@@ -389,36 +480,68 @@ namespace OrgnTransplant
                 return;
             }
 
-            // Create donor object
-            Donor donor = new Donor
-            {
-                FullName = fullName,
-                Hospital = hospital,
-                DateOfBirth = dob.Value,
-                Gender = gender,
-                NationalId = nationalId,
-                Phone = phone,
-                Email = email,
-                Address = address,
-                BloodType = bloodType,
-                RhFactor = rhFactor,
-                Allergies = allergies,
-                MedicalConditions = conditions,
-                Medications = medications,
-                Surgeries = surgeries,
-                InfectiousDiseases = infectious,
-                OrgansForDonation = organsForDonation,
-                RegistrationDate = DateTime.Now
-            };
-
             // Save to database using DatabaseHelper
             try
             {
-                bool success = DatabaseHelper.SaveDonor(donor);
-                if (success)
+                if (_isEditMode && _editingDonor != null)
                 {
-                    MessageBox.Show("Донорът е регистриран успешно!", "Успех", MessageBoxButton.OK, MessageBoxImage.Information);
-                    Close();
+                    // Update existing donor
+                    _editingDonor.FullName = fullName;
+                    _editingDonor.Hospital = hospital;
+                    _editingDonor.DateOfBirth = dob.Value;
+                    _editingDonor.Gender = gender;
+                    _editingDonor.NationalId = nationalId;
+                    _editingDonor.Phone = phone;
+                    _editingDonor.Email = email;
+                    _editingDonor.Address = address;
+                    _editingDonor.BloodType = bloodType;
+                    _editingDonor.RhFactor = rhFactor;
+                    _editingDonor.Allergies = allergies;
+                    _editingDonor.MedicalConditions = conditions;
+                    _editingDonor.Medications = medications;
+                    _editingDonor.Surgeries = surgeries;
+                    _editingDonor.InfectiousDiseases = infectious;
+                    _editingDonor.OrgansForDonation = organsForDonation;
+
+                    bool success = DatabaseHelper.UpdateDonor(_editingDonor);
+                    if (success)
+                    {
+                        MessageBox.Show("Донорът е обновен успешно!", "Успех",
+                            MessageBoxButton.OK, MessageBoxImage.Information);
+                        Close();
+                    }
+                }
+                else
+                {
+                    // Create new donor
+                    Donor donor = new Donor
+                    {
+                        FullName = fullName,
+                        Hospital = hospital,
+                        DateOfBirth = dob.Value,
+                        Gender = gender,
+                        NationalId = nationalId,
+                        Phone = phone,
+                        Email = email,
+                        Address = address,
+                        BloodType = bloodType,
+                        RhFactor = rhFactor,
+                        Allergies = allergies,
+                        MedicalConditions = conditions,
+                        Medications = medications,
+                        Surgeries = surgeries,
+                        InfectiousDiseases = infectious,
+                        OrgansForDonation = organsForDonation,
+                        RegistrationDate = DateTime.Now
+                    };
+
+                    bool success = DatabaseHelper.SaveDonor(donor);
+                    if (success)
+                    {
+                        MessageBox.Show("Донорът е регистриран успешно!", "Успех",
+                            MessageBoxButton.OK, MessageBoxImage.Information);
+                        Close();
+                    }
                 }
             }
             catch (Exception ex)
