@@ -700,6 +700,72 @@ namespace OrgnTransplant
             }
         }
 
+        // Show map for organ transport route
+        private void ShowMap_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                // Check if hospital is selected
+                if (CurrentHospital == null)
+                {
+                    MessageBox.Show(
+                        "Моля, първо изберете вашата болница от горното меню.",
+                        "Изберете болница",
+                        MessageBoxButton.OK,
+                        MessageBoxImage.Warning);
+                    return;
+                }
+
+                // Get organ info from button tag
+                if (sender is Button btn && btn.Tag is OrganInfo organInfo)
+                {
+                    // Get donor hospital location
+                    var donorHospital = HospitalLocation.GetByName(organInfo.Hospital);
+                    if (donorHospital == null)
+                    {
+                        MessageBox.Show(
+                            "Болницата на донора не може да бъде намерена в системата.",
+                            "Грешка",
+                            MessageBoxButton.OK,
+                            MessageBoxImage.Error);
+                        return;
+                    }
+
+                    // Calculate organ viability hours from ViabilityTimeDisplay
+                    double organViabilityHours = 12; // Default value
+                    var viabilityTimeMatch = System.Text.RegularExpressions.Regex.Match(
+                        organInfo.ViabilityTimeDisplay,
+                        @"(\d+(\.\d+)?)\s*(ч|часа)");
+
+                    if (viabilityTimeMatch.Success)
+                    {
+                        double.TryParse(viabilityTimeMatch.Groups[1].Value, out organViabilityHours);
+                    }
+
+                    // Open map window
+                    MapWindow mapWindow = new MapWindow(
+                        donorHospital.Latitude,
+                        donorHospital.Longitude,
+                        donorHospital.Name,
+                        CurrentHospital.Latitude,
+                        CurrentHospital.Longitude,
+                        CurrentHospital.Name,
+                        organViabilityHours
+                    );
+
+                    mapWindow.ShowDialog();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(
+                    $"Грешка при отваряне на карта:\n\n{ex.Message}",
+                    "Грешка",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Error);
+            }
+        }
+
         // Toggle showing expired organs
         private void ShowExpiredToggle_Click(object sender, RoutedEventArgs e)
         {

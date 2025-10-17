@@ -1,285 +1,354 @@
 ﻿<Window x:Class="OrgnTransplant.AddWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Регистрация на донор" Height="650" Width="700" WindowStartupLocation="CenterOwner">
-    <ScrollViewer VerticalScrollBarVisibility="Auto">
-        <Grid Margin="20">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="Auto"/>
-            </Grid.RowDefinitions>
-            <StackPanel Grid.Row="0" Margin="0,0,0,10">
-                <TextBlock Text="Регистрация на донор" FontSize="22" FontWeight="Bold" Margin="0,0,0,20"/>
+        Title="Регистрация на донор" Height="700" Width="900"
+        WindowStartupLocation="CenterOwner"
+        Background="{StaticResource BackgroundGradient}">
+    <Window.Resources>
+        <!-- Animated Card Style -->
+        <Style x:Key="FormSection" TargetType="Border">
+            <Setter Property="Background" Value="#25FFFFFF"/>
+            <Setter Property="CornerRadius" Value="15"/>
+            <Setter Property="Padding" Value="25"/>
+            <Setter Property="Margin" Value="0,0,0,20"/>
+            <Setter Property="Effect">
+                <Setter.Value>
+                    <DropShadowEffect Color="#000000" BlurRadius="20" ShadowDepth="5" Opacity="0.2"/>
+                </Setter.Value>
+            </Setter>
+        </Style>
 
-                <!-- Donor Type Selection -->
-                <Border Background="#E8F4F8" Padding="15" CornerRadius="8" Margin="0,0,0,15">
-                    <StackPanel>
-                        <TextBlock Text="Тип донор" FontWeight="Bold" FontSize="14" Margin="0,0,0,10"/>
-                        <StackPanel Orientation="Horizontal">
-                            <RadioButton x:Name="LivingDonorRadio" Content="🧍 Жив донор (предварителна регистрация)"
-                                         GroupName="DonorType" IsChecked="True" Margin="0,0,20,0"
-                                         Checked="DonorType_Changed" FontSize="13"/>
-                            <RadioButton x:Name="DeceasedDonorRadio" Content="⚰️ Починал донор (регистрация от семейство)"
-                                         GroupName="DonorType" Checked="DonorType_Changed" FontSize="13"/>
+        <!-- Donor Type Card -->
+        <Style x:Key="DonorTypeCard" TargetType="Border">
+            <Setter Property="Background" Value="{StaticResource PurpleGradient}"/>
+            <Setter Property="CornerRadius" Value="12"/>
+            <Setter Property="Padding" Value="20"/>
+            <Setter Property="Margin" Value="0,0,0,20"/>
+            <Setter Property="Effect">
+                <Setter.Value>
+                    <DropShadowEffect Color="#667EEA" BlurRadius="25" ShadowDepth="0" Opacity="0.6"/>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+
+    <Grid>
+        <!-- Header Bar -->
+        <Border Height="80" VerticalAlignment="Top" Background="#20FFFFFF">
+            <Border.Effect>
+                <DropShadowEffect Color="#000000" BlurRadius="15" ShadowDepth="3" Opacity="0.2"/>
+            </Border.Effect>
+            <Grid Margin="30,0">
+                <StackPanel VerticalAlignment="Center">
+                    <TextBlock Text="РЕГИСТРАЦИЯ НА ДОНОР"
+                               FontSize="26"
+                               FontWeight="Bold"
+                               Foreground="{StaticResource TextPrimaryBrush}"/>
+                    <TextBlock Text="Donor Registration System"
+                               FontSize="12"
+                               Foreground="{StaticResource TextSecondaryBrush}"
+                               Margin="0,3,0,0"/>
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <!-- Main Content -->
+        <ScrollViewer Margin="0,80,0,0" Style="{StaticResource ModernScrollViewer}">
+            <Grid Margin="40,30,40,40">
+                <StackPanel>
+                    <!-- Donor Type Selection Card -->
+                    <Border Style="{StaticResource DonorTypeCard}">
+                        <StackPanel>
+                            <TextBlock Text="ТИП ДОНОР"
+                                       FontSize="16"
+                                       FontWeight="Bold"
+                                       Foreground="White"
+                                       Margin="0,0,0,15"/>
+                            <StackPanel Orientation="Horizontal">
+                                <RadioButton x:Name="LivingDonorRadio"
+                                             Content="🧍 Жив донор (предварителна регистрация)"
+                                             GroupName="DonorType"
+                                             IsChecked="True"
+                                             Margin="0,0,30,0"
+                                             Checked="DonorType_Changed"
+                                             FontSize="14"
+                                             Foreground="White"
+                                             FontWeight="SemiBold"/>
+                                <RadioButton x:Name="DeceasedDonorRadio"
+                                             Content="⚰️ Починал донор (регистрация от семейство)"
+                                             GroupName="DonorType"
+                                             Checked="DonorType_Changed"
+                                             FontSize="14"
+                                             Foreground="White"
+                                             FontWeight="SemiBold"/>
+                            </StackPanel>
                         </StackPanel>
+                    </Border>
+
+                    <!-- Personal Information Section -->
+                    <Border Style="{StaticResource FormSection}">
+                        <StackPanel>
+                            <TextBlock Text="ЛИЧНА ИНФОРМАЦИЯ" Style="{StaticResource SectionHeader}"/>
+
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="20"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+
+                                <StackPanel Grid.Column="0">
+                                    <TextBlock Text="Три имена" Style="{StaticResource ModernLabel}"/>
+                                    <TextBox x:Name="FullNameBox" Style="{StaticResource ModernTextBox}" Margin="0,0,0,15"/>
+
+                                    <TextBlock Text="Дата на раждане (дд/мм/гггг)" Style="{StaticResource ModernLabel}"/>
+                                    <TextBox x:Name="DOBBox" Style="{StaticResource ModernTextBox}" Margin="0,0,0,15"/>
+
+                                    <TextBlock Text="ЕГН/Личен номер" Style="{StaticResource ModernLabel}"/>
+                                    <TextBox x:Name="NationalIdBox" Style="{StaticResource ModernTextBox}" Margin="0,0,0,15"/>
+                                </StackPanel>
+
+                                <StackPanel Grid.Column="2">
+                                    <TextBlock Text="Пол" Style="{StaticResource ModernLabel}"/>
+                                    <ComboBox x:Name="GenderBox" Style="{StaticResource ModernComboBox}" Margin="0,0,0,15">
+                                        <ComboBoxItem Content="Мъж"/>
+                                        <ComboBoxItem Content="Жена"/>
+                                    </ComboBox>
+
+                                    <TextBlock x:Name="PhoneLabel" Text="Телефон" Style="{StaticResource ModernLabel}"/>
+                                    <TextBox x:Name="PhoneBox" Style="{StaticResource ModernTextBox}" Margin="0,0,0,15"/>
+
+                                    <TextBlock x:Name="EmailLabel" Text="Имейл" Style="{StaticResource ModernLabel}"/>
+                                    <TextBox x:Name="EmailBox" Style="{StaticResource ModernTextBox}" Margin="0,0,0,15"/>
+                                </StackPanel>
+                            </Grid>
+
+                            <TextBlock x:Name="AddressLabel" Text="Адрес" Style="{StaticResource ModernLabel}"/>
+                            <TextBox x:Name="AddressBox" Style="{StaticResource ModernTextBox}"/>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Medical Information Section -->
+                    <Border Style="{StaticResource FormSection}">
+                        <StackPanel>
+                            <TextBlock Text="МЕДИЦИНСКА ИНФОРМАЦИЯ" Style="{StaticResource SectionHeader}"/>
+
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="20"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+
+                                <StackPanel Grid.Column="0">
+                                    <TextBlock Text="Кръвна група" Style="{StaticResource ModernLabel}"/>
+                                    <ComboBox x:Name="BloodTypeBox" Style="{StaticResource ModernComboBox}" Margin="0,0,0,15">
+                                        <ComboBoxItem Content="A"/>
+                                        <ComboBoxItem Content="B"/>
+                                        <ComboBoxItem Content="AB"/>
+                                        <ComboBoxItem Content="O"/>
+                                    </ComboBox>
+
+                                    <TextBlock Text="Известни алергии" Style="{StaticResource ModernLabel}"/>
+                                    <TextBox x:Name="AllergiesBox" Style="{StaticResource ModernTextBox}" Margin="0,0,0,15"/>
+
+                                    <TextBlock Text="Текущи медикаменти" Style="{StaticResource ModernLabel}"/>
+                                    <TextBox x:Name="MedicationsBox" Style="{StaticResource ModernTextBox}" Margin="0,0,0,15"/>
+                                </StackPanel>
+
+                                <StackPanel Grid.Column="2">
+                                    <TextBlock Text="Резус фактор" Style="{StaticResource ModernLabel}"/>
+                                    <ComboBox x:Name="RhFactorBox" Style="{StaticResource ModernComboBox}" Margin="0,0,0,15">
+                                        <ComboBoxItem Content="Положителен"/>
+                                        <ComboBoxItem Content="Отрицателен"/>
+                                    </ComboBox>
+
+                                    <TextBlock Text="Медицински състояния" Style="{StaticResource ModernLabel}"/>
+                                    <TextBox x:Name="ConditionsBox" Style="{StaticResource ModernTextBox}" Margin="0,0,0,15"/>
+
+                                    <TextBlock Text="Скорошни операции/хоспитализации" Style="{StaticResource ModernLabel}"/>
+                                    <TextBox x:Name="SurgeriesBox" Style="{StaticResource ModernTextBox}" Margin="0,0,0,15"/>
+                                </StackPanel>
+                            </Grid>
+
+                            <TextBlock Text="Инфекциозни заболявания" Style="{StaticResource ModernLabel}"/>
+                            <ComboBox x:Name="InfectiousBox"
+                                      Style="{StaticResource ModernComboBox}"
+                                      Margin="0,0,0,15"
+                                      SelectionChanged="InfectiousBox_SelectionChanged">
+                                <ComboBoxItem Content="Няма"/>
+                                <ComboBoxItem Content="HIV"/>
+                                <ComboBoxItem Content="Хепатит B"/>
+                                <ComboBoxItem Content="Хепатит C"/>
+                                <ComboBoxItem Content="Друго"/>
+                            </ComboBox>
+
+                            <TextBlock x:Name="InfectiousOtherLabel"
+                                       Text="Опишете инфекциозното заболяване:"
+                                       Style="{StaticResource ModernLabel}"
+                                       Visibility="Collapsed"/>
+                            <TextBox x:Name="InfectiousOtherBox"
+                                     Style="{StaticResource ModernTextBox}"
+                                     Visibility="Collapsed"
+                                     TextWrapping="Wrap"
+                                     Height="80"
+                                     Margin="0,0,0,15"/>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Organs for Donation Section -->
+                    <Border Style="{StaticResource FormSection}">
+                        <StackPanel>
+                            <TextBlock Text="ОРГАНИ ЗА ДОНОРСТВО" Style="{StaticResource SectionHeader}"/>
+                            <WrapPanel x:Name="OrganPanel">
+                                <CheckBox Content="Сърце" Style="{StaticResource ModernCheckBox}" Margin="0,5,20,5"/>
+                                <CheckBox Content="Бял дроб" Style="{StaticResource ModernCheckBox}" Margin="0,5,20,5"/>
+                                <CheckBox Content="Черен дроб" Style="{StaticResource ModernCheckBox}" Margin="0,5,20,5"/>
+                                <CheckBox Content="Бъбрек" Style="{StaticResource ModernCheckBox}" Margin="0,5,20,5"/>
+                                <CheckBox Content="Панкреас" Style="{StaticResource ModernCheckBox}" Margin="0,5,20,5"/>
+                                <CheckBox Content="Стомах" Style="{StaticResource ModernCheckBox}" Margin="0,5,20,5"/>
+                                <CheckBox Content="Тимус" Style="{StaticResource ModernCheckBox}" Margin="0,5,20,5"/>
+                                <CheckBox Content="Артерия" Style="{StaticResource ModernCheckBox}" Margin="0,5,20,5"/>
+                            </WrapPanel>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Deceased Donor Specific Fields -->
+                    <Border x:Name="DeceasedDonorPanel" Style="{StaticResource FormSection}" Visibility="Collapsed">
+                        <StackPanel>
+                            <TextBlock Text="ИНФОРМАЦИЯ ЗА ПОЧИНАЛ ДОНОР" Style="{StaticResource SectionHeader}"/>
+
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="20"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+
+                                <StackPanel Grid.Column="0">
+                                    <TextBlock Text="Дата на смърт (дд/мм/гггг)" Style="{StaticResource ModernLabel}"/>
+                                    <TextBox x:Name="DateOfDeathBox" Style="{StaticResource ModernTextBox}" Margin="0,0,0,15"/>
+
+                                    <TextBlock Text="Причина за смърт" Style="{StaticResource ModernLabel}"/>
+                                    <TextBox x:Name="CauseOfDeathBox"
+                                             Style="{StaticResource ModernTextBox}"
+                                             TextWrapping="Wrap"
+                                             Height="80"
+                                             Margin="0,0,0,15"/>
+
+                                    <TextBlock Text="Връзка с починалия" Style="{StaticResource ModernLabel}"/>
+                                    <ComboBox x:Name="FamilyRelationshipBox"
+                                              Style="{StaticResource ModernComboBox}"
+                                              Margin="0,0,0,15"
+                                              SelectionChanged="FamilyRelationshipBox_SelectionChanged">
+                                        <ComboBoxItem Content="Съпруг/а"/>
+                                        <ComboBoxItem Content="Син"/>
+                                        <ComboBoxItem Content="Дъщеря"/>
+                                        <ComboBoxItem Content="Родител"/>
+                                        <ComboBoxItem Content="Брат"/>
+                                        <ComboBoxItem Content="Сестра"/>
+                                        <ComboBoxItem Content="Друг роднина"/>
+                                    </ComboBox>
+                                </StackPanel>
+
+                                <StackPanel Grid.Column="2">
+                                    <TextBlock Text="Час на смърт (чч:мм)" Style="{StaticResource ModernLabel}"/>
+                                    <TextBox x:Name="DeathTimeBox" Style="{StaticResource ModernTextBox}" Margin="0,0,0,15"/>
+
+                                    <TextBlock Text="Съгласие дадено от (име на роднина)" Style="{StaticResource ModernLabel}"/>
+                                    <TextBox x:Name="FamilyConsentBox" Style="{StaticResource ModernTextBox}" Margin="0,0,0,15"/>
+
+                                    <TextBlock Text="Телефон за контакт (на роднината)" Style="{StaticResource ModernLabel}"/>
+                                    <TextBox x:Name="FamilyContactPhoneBox" Style="{StaticResource ModernTextBox}" Margin="0,0,0,15"/>
+                                </StackPanel>
+                            </Grid>
+
+                            <TextBlock x:Name="FamilyRelationshipOtherLabel"
+                                       Text="Опишете връзката:"
+                                       Style="{StaticResource ModernLabel}"
+                                       Visibility="Collapsed"/>
+                            <TextBox x:Name="FamilyRelationshipOtherBox"
+                                     Style="{StaticResource ModernTextBox}"
+                                     Visibility="Collapsed"
+                                     Margin="0,0,0,15"/>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Organ Viability Information -->
+                    <Border x:Name="OrganViabilityPanel" Style="{StaticResource FormSection}" Visibility="Collapsed">
+                        <StackPanel>
+                            <TextBlock Text="ИНФОРМАЦИЯ ЗА ГОДНОСТ НА ОРГАНИТЕ" Style="{StaticResource SectionHeader}"/>
+
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="20"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+
+                                <StackPanel Grid.Column="0">
+                                    <TextBlock Text="Дата на прибиране на органите (дд/мм/гггг)" Style="{StaticResource ModernLabel}"/>
+                                    <TextBox x:Name="HarvestDateBox" Style="{StaticResource ModernTextBox}" Margin="0,0,0,15"/>
+                                </StackPanel>
+
+                                <StackPanel Grid.Column="2">
+                                    <TextBlock Text="Час на прибиране (чч:мм)" Style="{StaticResource ModernLabel}"/>
+                                    <TextBox x:Name="HarvestTimeBox" Style="{StaticResource ModernTextBox}" Margin="0,0,0,15"/>
+                                </StackPanel>
+                            </Grid>
+
+                            <TextBlock Text="Качество на органите" Style="{StaticResource ModernLabel}"/>
+                            <ComboBox x:Name="OrganQualityBox" Style="{StaticResource ModernComboBox}">
+                                <ComboBoxItem Content="Отлично" Tag="Excellent"/>
+                                <ComboBoxItem Content="Добро" Tag="Good"/>
+                                <ComboBoxItem Content="Задоволително" Tag="Fair"/>
+                                <ComboBoxItem Content="Лошо" Tag="Poor"/>
+                            </ComboBox>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Additional Notes Section -->
+                    <Border Style="{StaticResource FormSection}">
+                        <StackPanel>
+                            <TextBlock Text="ДОПЪЛНИТЕЛНИ БЕЛЕЖКИ" Style="{StaticResource SectionHeader}"/>
+                            <TextBox x:Name="AdditionalNotesBox"
+                                     Style="{StaticResource ModernTextBox}"
+                                     TextWrapping="Wrap"
+                                     Height="100"
+                                     AcceptsReturn="True"
+                                     VerticalScrollBarVisibility="Auto"/>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Registration Tracking Section -->
+                    <Border Style="{StaticResource FormSection}">
+                        <StackPanel>
+                            <TextBlock Text="ИНФОРМАЦИЯ ЗА РЕГИСТРАЦИЯТА" Style="{StaticResource SectionHeader}"/>
+                            <TextBlock Text="Регистрирано от (име на медицински персонал)" Style="{StaticResource ModernLabel}"/>
+                            <TextBox x:Name="RegisteredByBox" Style="{StaticResource ModernTextBox}"/>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Action Buttons -->
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,10,0,0">
+                        <Button Content="ЗАПАЗИ"
+                                Style="{StaticResource SuccessButton}"
+                                Click="Save_Click"
+                                Width="150"
+                                Margin="0,0,15,0"/>
+                        <Button Content="ОТКАЗ"
+                                Style="{StaticResource SecondaryButton}"
+                                Click="Close_Click"
+                                Width="150"/>
                     </StackPanel>
-                </Border>
-            </StackPanel>
-            <StackPanel Grid.Row="1" VerticalAlignment="Top" HorizontalAlignment="Stretch" >
-                <!-- Лична информация -->
-                <TextBlock Text="Лична информация" FontWeight="Bold" Margin="0,10,0,5"/>
-                <TextBlock Text="Три имена"/>
-                <TextBox x:Name="FullNameBox" Margin="0,0,0,8"/>
-                <TextBlock Text="Дата на раждане (дд/мм/гггг)" Margin="0,5,0,2"/>
-                <TextBox x:Name="DOBBox" Margin="0,0,0,8" Width="200" HorizontalAlignment="Left">
-                    <TextBox.Style>
-                        <Style TargetType="TextBox">
-                            <Style.Triggers>
-                                <Trigger Property="Text" Value="">
-                                    <Setter Property="Background">
-                                        <Setter.Value>
-                                            <VisualBrush Stretch="None" AlignmentX="Left">
-                                                <VisualBrush.Visual>
-                                                    <TextBlock Text="дд/мм/гггг" Foreground="LightGray" Margin="5,0,0,0"/>
-                                                </VisualBrush.Visual>
-                                            </VisualBrush>
-                                        </Setter.Value>
-                                    </Setter>
-                                </Trigger>
-                            </Style.Triggers>
-                        </Style>
-                    </TextBox.Style>
-                </TextBox>
-                <TextBlock Text="Пол"/>
-                <ComboBox x:Name="GenderBox" Width="120" Margin="0,0,0,8">
-                    <ComboBoxItem Content="Мъж"/>
-                    <ComboBoxItem Content="Жена"/>
-                </ComboBox>
-                <TextBlock Text="ЕГН/Личен номер"/>
-                <TextBox x:Name="NationalIdBox" Margin="0,0,0,8"/>
-                <TextBlock x:Name="PhoneLabel" Text="Телефон"/>
-                <TextBox x:Name="PhoneBox" Margin="0,0,0,8"/>
-                <TextBlock x:Name="EmailLabel" Text="Имейл"/>
-                <TextBox x:Name="EmailBox" Margin="0,0,0,8"/>
-                <TextBlock x:Name="AddressLabel" Text="Адрес"/>
-                <TextBox x:Name="AddressBox" Margin="0,0,0,8"/>
 
-                <!-- Медицинска информация -->
-                <TextBlock Text="Медицинска информация" FontWeight="Bold" Margin="0,15,0,5"/>
-                <TextBlock Text="Кръвна група"/>
-                <ComboBox x:Name="BloodTypeBox" Width="120" Margin="0,0,0,8">
-                    <ComboBoxItem Content="A"/>
-                    <ComboBoxItem Content="B"/>
-                    <ComboBoxItem Content="AB"/>
-                    <ComboBoxItem Content="O"/>
-                </ComboBox>
-                <TextBlock Text="Резус фактор"/>
-                <ComboBox x:Name="RhFactorBox" Width="120" Margin="0,0,0,8">
-                    <ComboBoxItem Content="Положителен"/>
-                    <ComboBoxItem Content="Отрицателен"/>
-                </ComboBox>
-                <TextBlock Text="Известни алергии"/>
-                <TextBox x:Name="AllergiesBox" Margin="0,0,0,8"/>
-                <TextBlock Text="Медицински състояния"/>
-                <TextBox x:Name="ConditionsBox" Margin="0,0,0,8"/>
-                <TextBlock Text="Текущи медикаменти"/>
-                <TextBox x:Name="MedicationsBox" Margin="0,0,0,8"/>
-                <TextBlock Text="Скорошни операции/хоспитализации"/>
-                <TextBox x:Name="SurgeriesBox" Margin="0,0,0,8"/>
-                <TextBlock Text="Инфекциозни заболявания"/>
-                <ComboBox x:Name="InfectiousBox" Margin="0,0,0,8" SelectionChanged="InfectiousBox_SelectionChanged">
-                    <ComboBoxItem Content="Няма"/>
-                    <ComboBoxItem Content="HIV"/>
-                    <ComboBoxItem Content="Хепатит B"/>
-                    <ComboBoxItem Content="Хепатит C"/>
-                    <ComboBoxItem Content="Друго"/>
-                </ComboBox>
-                <TextBlock x:Name="InfectiousOtherLabel" Text="Опишете инфекциозното заболяване:" Visibility="Collapsed" Margin="0,5,0,2"/>
-                <TextBox x:Name="InfectiousOtherBox" Visibility="Collapsed" Margin="0,0,0,8" TextWrapping="Wrap" Height="60"/>
-                <TextBlock Text="Органи за донорство:" Margin="0,10,0,2"/>
-                <WrapPanel x:Name="OrganPanel">
-                    <CheckBox Content="Сърце" Margin="0,0,10,0"/>
-                    <CheckBox Content="Бял дроб" Margin="0,0,10,0"/>
-                    <CheckBox Content="Черен дроб" Margin="0,0,10,0"/>
-                    <CheckBox Content="Бъбрек" Margin="0,0,10,0"/>
-                    <CheckBox Content="Панкреас" Margin="0,0,10,0"/>
-                    <CheckBox Content="Черен дроб" Margin="0,0,10,0"/>
-                    <CheckBox Content="Стомах" Margin="0,0,10,0"/>
-                    <CheckBox Content="Тимус" Margin="0,0,10,0"/>
-                    <CheckBox Content="Артерия" Margin="0,0,10,0"/>
-                </WrapPanel>
-
-                <!-- Deceased Donor Specific Fields -->
-                <StackPanel x:Name="DeceasedDonorPanel" Visibility="Collapsed">
-                    <TextBlock Text="Информация за починал донор" FontWeight="Bold" Margin="0,15,0,5"/>
-
-                    <TextBlock Text="Дата на смърт (дд/мм/гггг)" Margin="0,5,0,2"/>
-                    <TextBox x:Name="DateOfDeathBox" Margin="0,0,0,4" Width="200" HorizontalAlignment="Left">
-                        <TextBox.Style>
-                            <Style TargetType="TextBox">
-                                <Style.Triggers>
-                                    <Trigger Property="Text" Value="">
-                                        <Setter Property="Background">
-                                            <Setter.Value>
-                                                <VisualBrush Stretch="None" AlignmentX="Left">
-                                                    <VisualBrush.Visual>
-                                                        <TextBlock Text="дд/мм/гггг" Foreground="LightGray" Margin="5,0,0,0"/>
-                                                    </VisualBrush.Visual>
-                                                </VisualBrush>
-                                            </Setter.Value>
-                                        </Setter>
-                                    </Trigger>
-                                </Style.Triggers>
-                            </Style>
-                        </TextBox.Style>
-                    </TextBox>
-                    <TextBlock Text="Час на смърт (чч:мм)" Margin="0,5,0,2"/>
-                    <TextBox x:Name="DeathTimeBox" Margin="0,0,0,8" Width="100" HorizontalAlignment="Left">
-                        <TextBox.Style>
-                            <Style TargetType="TextBox">
-                                <Style.Triggers>
-                                    <Trigger Property="Text" Value="">
-                                        <Setter Property="Background">
-                                            <Setter.Value>
-                                                <VisualBrush Stretch="None" AlignmentX="Left">
-                                                    <VisualBrush.Visual>
-                                                        <TextBlock Text="чч:мм" Foreground="LightGray" Margin="5,0,0,0"/>
-                                                    </VisualBrush.Visual>
-                                                </VisualBrush>
-                                            </Setter.Value>
-                                        </Setter>
-                                    </Trigger>
-                                </Style.Triggers>
-                            </Style>
-                        </TextBox.Style>
-                    </TextBox>
-
-                    <TextBlock Text="Причина за смърт" Margin="0,5,0,2"/>
-                    <TextBox x:Name="CauseOfDeathBox" Margin="0,0,0,8" TextWrapping="Wrap" Height="60"/>
-
-                    <TextBlock Text="Съгласие дадено от (име на роднина)" Margin="0,5,0,2"/>
-                    <TextBox x:Name="FamilyConsentBox" Margin="0,0,0,8"/>
-
-                    <TextBlock Text="Връзка с починалия" Margin="0,5,0,2"/>
-                    <ComboBox x:Name="FamilyRelationshipBox" Margin="0,0,0,8" SelectionChanged="FamilyRelationshipBox_SelectionChanged">
-                        <ComboBoxItem Content="Съпруг/а"/>
-                        <ComboBoxItem Content="Син"/>
-                        <ComboBoxItem Content="Дъщеря"/>
-                        <ComboBoxItem Content="Родител"/>
-                        <ComboBoxItem Content="Брат"/>
-                        <ComboBoxItem Content="Сестра"/>
-                        <ComboBoxItem Content="Друг роднина"/>
-                    </ComboBox>
-                    <TextBlock x:Name="FamilyRelationshipOtherLabel" Text="Опишете връзката:" Visibility="Collapsed" Margin="0,5,0,2"/>
-                    <TextBox x:Name="FamilyRelationshipOtherBox" Visibility="Collapsed" Margin="0,0,0,8"/>
-
-                    <TextBlock Text="Телефон за контакт (на роднината)" Margin="0,5,0,2"/>
-                    <TextBox x:Name="FamilyContactPhoneBox" Margin="0,0,0,8"/>
+                    <!-- Hidden old hour/minute dropdowns -->
+                    <StackPanel Visibility="Collapsed">
+                        <ComboBox x:Name="HarvestHourBox_OLD"/>
+                        <ComboBox x:Name="HarvestMinuteBox_OLD"/>
+                    </StackPanel>
                 </StackPanel>
-
-                <!-- Organ Viability Information -->
-                <StackPanel x:Name="OrganViabilityPanel" Visibility="Collapsed">
-                    <TextBlock Text="Информация за годност на органите" FontWeight="Bold" Margin="0,15,0,5"/>
-                    <TextBlock Text="Дата на прибиране на органите (дд/мм/гггг)" Margin="0,5,0,2"/>
-                <TextBox x:Name="HarvestDateBox" Margin="0,0,0,4" Width="200" HorizontalAlignment="Left">
-                    <TextBox.Style>
-                        <Style TargetType="TextBox">
-                            <Style.Triggers>
-                                <Trigger Property="Text" Value="">
-                                    <Setter Property="Background">
-                                        <Setter.Value>
-                                            <VisualBrush Stretch="None" AlignmentX="Left">
-                                                <VisualBrush.Visual>
-                                                    <TextBlock Text="дд/мм/гггг" Foreground="LightGray" Margin="5,0,0,0"/>
-                                                </VisualBrush.Visual>
-                                            </VisualBrush>
-                                        </Setter.Value>
-                                    </Setter>
-                                </Trigger>
-                            </Style.Triggers>
-                        </Style>
-                    </TextBox.Style>
-                </TextBox>
-                <TextBlock Text="Час на прибиране (чч:мм)" Margin="0,5,0,2"/>
-                <TextBox x:Name="HarvestTimeBox" Margin="0,0,0,8" Width="100" HorizontalAlignment="Left">
-                    <TextBox.Style>
-                        <Style TargetType="TextBox">
-                            <Style.Triggers>
-                                <Trigger Property="Text" Value="">
-                                    <Setter Property="Background">
-                                        <Setter.Value>
-                                            <VisualBrush Stretch="None" AlignmentX="Left">
-                                                <VisualBrush.Visual>
-                                                    <TextBlock Text="чч:мм" Foreground="LightGray" Margin="5,0,0,0"/>
-                                                </VisualBrush.Visual>
-                                            </VisualBrush>
-                                        </Setter.Value>
-                                    </Setter>
-                                </Trigger>
-                            </Style.Triggers>
-                        </Style>
-                    </TextBox.Style>
-                </TextBox>
-                <StackPanel Orientation="Horizontal" Margin="0,0,0,8" Visibility="Collapsed">
-                    <TextBlock Text="Час:" Margin="0,0,5,0" VerticalAlignment="Center"/>
-                    <ComboBox x:Name="HarvestHourBox_OLD" Width="60" Margin="0,0,5,0">
-                        <ComboBoxItem Content="00"/>
-                        <ComboBoxItem Content="01"/>
-                        <ComboBoxItem Content="02"/>
-                        <ComboBoxItem Content="03"/>
-                        <ComboBoxItem Content="04"/>
-                        <ComboBoxItem Content="05"/>
-                        <ComboBoxItem Content="06"/>
-                        <ComboBoxItem Content="07"/>
-                        <ComboBoxItem Content="08"/>
-                        <ComboBoxItem Content="09"/>
-                        <ComboBoxItem Content="10"/>
-                        <ComboBoxItem Content="11"/>
-                        <ComboBoxItem Content="12"/>
-                        <ComboBoxItem Content="13"/>
-                        <ComboBoxItem Content="14"/>
-                        <ComboBoxItem Content="15"/>
-                        <ComboBoxItem Content="16"/>
-                        <ComboBoxItem Content="17"/>
-                        <ComboBoxItem Content="18"/>
-                        <ComboBoxItem Content="19"/>
-                        <ComboBoxItem Content="20"/>
-                        <ComboBoxItem Content="21"/>
-                        <ComboBoxItem Content="22"/>
-                        <ComboBoxItem Content="23"/>
-                    </ComboBox>
-                    <TextBlock Text=":" Margin="0,0,5,0" VerticalAlignment="Center"/>
-                    <ComboBox x:Name="HarvestMinuteBox_OLD" Width="60">
-                        <ComboBoxItem Content="00"/>
-                        <ComboBoxItem Content="15"/>
-                        <ComboBoxItem Content="30"/>
-                        <ComboBoxItem Content="45"/>
-                    </ComboBox>
-                </StackPanel>
-                    <TextBlock Text="Качество на органите"/>
-                    <ComboBox x:Name="OrganQualityBox" Width="200" Margin="0,0,0,8" HorizontalAlignment="Left">
-                        <ComboBoxItem Content="Отлично" Tag="Excellent"/>
-                        <ComboBoxItem Content="Добро" Tag="Good"/>
-                        <ComboBoxItem Content="Задоволително" Tag="Fair"/>
-                        <ComboBoxItem Content="Лошо" Tag="Poor"/>
-                    </ComboBox>
-                </StackPanel>
-
-                <!-- Additional Notes -->
-                <TextBlock Text="Допълнителни бележки" FontWeight="Bold" Margin="0,15,0,5"/>
-                <TextBox x:Name="AdditionalNotesBox" Margin="0,0,0,8" TextWrapping="Wrap" Height="80"
-                         VerticalScrollBarVisibility="Auto" AcceptsReturn="True"/>
-
-                <!-- Registration Tracking -->
-                <TextBlock Text="Информация за регистрацията" FontWeight="Bold" Margin="0,15,0,5"/>
-                <TextBlock Text="Регистрирано от (име на медицински персонал)" Margin="0,5,0,2"/>
-                <TextBox x:Name="RegisteredByBox" Margin="0,0,0,8"/>
-            </StackPanel>
-            <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,20,0,0">
-                <Button Content="Запази" Width="100" Click="Save_Click" Margin="0,0,10,0"/>
-                <Button Content="Отказ" Click="Close_Click" Width="100"/>
-            </StackPanel>
-        </Grid>
-    </ScrollViewer>
+            </Grid>
+        </ScrollViewer>
+    </Grid>
 </Window>

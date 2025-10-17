@@ -19,9 +19,17 @@
     <None Remove="Resources\icons\Chest\Pulmonary Artery.png" />
     <None Remove="Resources\icons\Chest\Thymus.png" />
     <None Remove="Resources\icons\Tissues, cells and fluids\cornea_5793544__1_-removebg-preview.png" />
+    <None Remove="Resources\map.html" />
   </ItemGroup>
 
   <ItemGroup>
+    <Content Include="Resources\map.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.3537.50" />
     <PackageReference Include="MySql.Data" Version="9.4.0" />
   </ItemGroup>
 

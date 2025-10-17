@@ -212,6 +212,24 @@ namespace OrgnTransplant
             };
             leftPanel.Children.Add(dateText);
 
+            // Бутон за карта
+            Button mapButton = new Button
+            {
+                Content = "🗺️ Покажи маршрут",
+                Background = Brushes.White,
+                Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#4FACFE")),
+                BorderBrush = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#4FACFE")),
+                BorderThickness = new Thickness(2),
+                FontSize = 13,
+                FontWeight = FontWeights.SemiBold,
+                Padding = new Thickness(15, 8, 15, 8),
+                Cursor = System.Windows.Input.Cursors.Hand,
+                Margin = new Thickness(0, 10, 0, 0),
+                HorizontalAlignment = HorizontalAlignment.Left
+            };
+            mapButton.Click += (s, e) => ShowMapForMessage(message);
+            leftPanel.Children.Add(mapButton);
+
             // Ако има отговор
             if (message.Status != MessageStatus.Pending)
             {
@@ -400,6 +418,24 @@ namespace OrgnTransplant
             };
             panel.Children.Add(dateText);
 
+            // Бутон за карта
+            Button mapButton = new Button
+            {
+                Content = "🗺️ Покажи маршрут",
+                Background = Brushes.White,
+                Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#4FACFE")),
+                BorderBrush = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#4FACFE")),
+                BorderThickness = new Thickness(2),
+                FontSize = 13,
+                FontWeight = FontWeights.SemiBold,
+                Padding = new Thickness(15, 8, 15, 8),
+                Cursor = System.Windows.Input.Cursors.Hand,
+                Margin = new Thickness(0, 10, 0, 0),
+                HorizontalAlignment = HorizontalAlignment.Left
+            };
+            mapButton.Click += (s, e) => ShowMapForMessage(message);
+            panel.Children.Add(mapButton);
+
             // Ако има отговор
             if (message.Status != MessageStatus.Pending)
             {
@@ -527,6 +563,53 @@ namespace OrgnTransplant
             catch (Exception ex)
             {
                 MessageBox.Show($"Грешка при отговор на съобщението:\n\n{ex.Message}",
+                    "Грешка", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        /// <summary>
+        /// Показва карта с маршрут за съобщение
+        /// </summary>
+        private void ShowMapForMessage(Message message)
+        {
+            try
+            {
+                // Вземаме информация за болниците
+                var fromHospital = HospitalLocation.GetByName(message.FromHospital);
+                var toHospital = HospitalLocation.GetByName(message.ToHospital);
+
+                if (fromHospital == null)
+                {
+                    MessageBox.Show($"Болницата \"{message.FromHospital}\" не е намерена в базата данни.",
+                        "Грешка", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    return;
+                }
+
+                if (toHospital == null)
+                {
+                    MessageBox.Show($"Болницата \"{message.ToHospital}\" не е намерена в базата данни.",
+                        "Грешка", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    return;
+                }
+
+                // Вземаме жизнеспособността на органа в часове
+                double organViabilityHours = OrganViability.GetViabilityHours(message.OrganName);
+
+                // Отваряме прозореца с картата
+                MapWindow mapWindow = new MapWindow(
+                    fromHospital.Latitude,
+                    fromHospital.Longitude,
+                    fromHospital.Name,
+                    toHospital.Latitude,
+                    toHospital.Longitude,
+                    toHospital.Name,
+                    organViabilityHours);
+
+                mapWindow.ShowDialog();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Грешка при показване на картата:\n\n{ex.Message}",
                     "Грешка", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
