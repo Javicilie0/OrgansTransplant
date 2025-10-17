@@ -1,8 +1,14 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <configuration>
   <connectionStrings>
+    <!--
+      IMPORTANT: This is an example configuration file.
+      Copy this file to App.config and replace with your actual database credentials.
+
+      Never commit App.config to version control!
+    -->
     <add name="OrganTransplantDB"
-         connectionString="Server=shortline.proxy.rlwy.net;Port=12048;Database=railway;User Id=root;Password=sOUKfiykIGLXorMFXWXMFxbhXLBxnmRr;"
+         connectionString="Server=your-server-address;Port=3306;Database=your-database-name;User Id=your-username;Password=your-password;"
          providerName="MySql.Data.MySqlClient" />
   </connectionStrings>
 

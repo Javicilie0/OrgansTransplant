@@ -9,19 +9,31 @@ namespace OrgnTransplant
     public static class ConfigurationHelper
     {
         /// <summary>
-        /// Get database connection string from App.config
+        /// Get database connection string from environment variable or App.config
+        /// Priority: 1. Environment Variable, 2. App.config
         /// </summary>
         public static string GetConnectionString()
         {
             try
             {
+                // First, try to get connection string from environment variable (most secure)
+                string? envConnectionString = Environment.GetEnvironmentVariable("ORGAN_TRANSPLANT_DB_CONNECTION");
+                if (!string.IsNullOrEmpty(envConnectionString))
+                {
+                    Logger.LogInfo("Using connection string from environment variable");
+                    return envConnectionString;
+                }
+
+                // Fallback to App.config
                 var connectionString = ConfigurationManager.ConnectionStrings["OrganTransplantDB"]?.ConnectionString;
 
                 if (string.IsNullOrEmpty(connectionString))
                 {
-                    throw new ConfigurationErrorsException("Connection string 'OrganTransplantDB' not found in App.config");
+                    throw new ConfigurationErrorsException(
+                        "Connection string not found. Set ORGAN_TRANSPLANT_DB_CONNECTION environment variable or configure App.config");
                 }
 
+                Logger.LogInfo("Using connection string from App.config");
                 return connectionString;
             }
             catch (Exception ex)

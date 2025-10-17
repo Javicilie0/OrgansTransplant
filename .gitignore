@@ -361,3 +361,12 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+
+# Configuration files with sensitive data
+App.config
+*.dll.config
+*.exe.config
+
+# Log files with potentially sensitive information
+Logs/
+*.log
