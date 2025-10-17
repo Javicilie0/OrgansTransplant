@@ -11,5 +11,10 @@ namespace OrgnTransplant
         public string DistanceDisplay => DistanceKm < 1000
             ? $"{DistanceKm:F0} км"
             : $"{DistanceKm:F0} км";
+
+        // Organ viability properties
+        public string ViabilityTimeDisplay { get; set; }
+        public string ViabilityColor { get; set; }
+        public string QualityDisplay { get; set; }
     }
 }

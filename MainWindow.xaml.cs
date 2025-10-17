@@ -22,6 +22,7 @@ namespace OrgnTransplant
         private ObservableCollection<DonorViewModel> displayedDonors;
         private AppSettings settings;
         public static HospitalLocation CurrentHospital { get; private set; }
+        private bool showExpiredOrgans = false; // Toggle state for expired organs
 
         public MainWindow()
         {
@@ -96,8 +97,25 @@ namespace OrgnTransplant
 
         private void Add_Click(object sender, RoutedEventArgs e)
         {
-            AddWindow addWindow = new AddWindow();
-            addWindow.ShowDialog();
+            try
+            {
+                AddWindow addWindow = new AddWindow();
+                addWindow.ShowDialog();
+
+                // Reload donors if we're on the donors view
+                if (DonorsViewGrid.Visibility == Visibility.Visible)
+                {
+                    LoadDonors();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(
+                    $"Грешка при отваряне на прозорец за регистрация:\n\n{ex.Message}\n\nСтек:\n{ex.StackTrace}",
+                    "Грешка",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Error);
+            }
         }
 
         private void viewAll_Click(object sender, RoutedEventArgs e)
@@ -148,6 +166,39 @@ namespace OrgnTransplant
                                     }
                                 }
 
+                                // Calculate viability information
+                                string viabilityTimeDisplay = OrganViability.FormatRemainingTime(organTrimmed, donor.OrganHarvestTime);
+                                string viabilityColor = OrganViability.GetViabilityColor(organTrimmed, donor.OrganHarvestTime);
+                                bool isViable = OrganViability.IsOrganViable(organTrimmed, donor.OrganHarvestTime);
+
+                                // Skip expired organs if toggle is off
+                                if (!showExpiredOrgans && !isViable)
+                                    continue;
+
+                                // Format quality display
+                                string qualityDisplay = "N/A";
+                                if (!string.IsNullOrEmpty(donor.OrganQuality))
+                                {
+                                    switch (donor.OrganQuality.ToLower())
+                                    {
+                                        case "excellent":
+                                            qualityDisplay = "⭐ Отлично";
+                                            break;
+                                        case "good":
+                                            qualityDisplay = "✓ Добро";
+                                            break;
+                                        case "fair":
+                                            qualityDisplay = "◐ Задоволително";
+                                            break;
+                                        case "poor":
+                                            qualityDisplay = "✗ Лошо";
+                                            break;
+                                        default:
+                                            qualityDisplay = donor.OrganQuality;
+                                            break;
+                                    }
+                                }
+
                                 organsList.Add(new OrganInfo
                                 {
                                     IconPath = iconPath,
@@ -158,7 +209,10 @@ namespace OrgnTransplant
                                     AdditionalInfo = $"Blood Type: {donor.BloodType} {donor.RhFactor}\n" +
                                                    $"Phone: {donor.Phone}\n" +
                                                    $"Email: {donor.Email}\n" +
-                                                   $"National ID: {donor.NationalId}"
+                                                   $"ЕГН: {donor.NationalId}",
+                                    ViabilityTimeDisplay = viabilityTimeDisplay,
+                                    ViabilityColor = viabilityColor,
+                                    QualityDisplay = qualityDisplay
                                 });
                             }
                         }
@@ -185,6 +239,39 @@ namespace OrgnTransplant
                             }
                         }
 
+                        // Calculate viability information
+                        string viabilityTimeDisplay = OrganViability.FormatRemainingTime(organName, donor.OrganHarvestTime);
+                        string viabilityColor = OrganViability.GetViabilityColor(organName, donor.OrganHarvestTime);
+                        bool isViable = OrganViability.IsOrganViable(organName, donor.OrganHarvestTime);
+
+                        // Skip expired organs if toggle is off
+                        if (!showExpiredOrgans && !isViable)
+                            continue;
+
+                        // Format quality display
+                        string qualityDisplay = "N/A";
+                        if (!string.IsNullOrEmpty(donor.OrganQuality))
+                        {
+                            switch (donor.OrganQuality.ToLower())
+                            {
+                                case "excellent":
+                                    qualityDisplay = "⭐ Отлично";
+                                    break;
+                                case "good":
+                                    qualityDisplay = "✓ Добро";
+                                    break;
+                                case "fair":
+                                    qualityDisplay = "◐ Задоволително";
+                                    break;
+                                case "poor":
+                                    qualityDisplay = "✗ Лошо";
+                                    break;
+                                default:
+                                    qualityDisplay = donor.OrganQuality;
+                                    break;
+                            }
+                        }
+
                         organsList.Add(new OrganInfo
                         {
                             IconPath = iconPath,
@@ -195,7 +282,10 @@ namespace OrgnTransplant
                             AdditionalInfo = $"Кръвна група: {donor.BloodType} {donor.RhFactor}\n" +
                                            $"Телефон: {donor.Phone}\n" +
                                            $"Имейл: {donor.Email}\n" +
-                                           $"ЕГН: {donor.NationalId}"
+                                           $"ЕГН: {donor.NationalId}",
+                            ViabilityTimeDisplay = viabilityTimeDisplay,
+                            ViabilityColor = viabilityColor,
+                            QualityDisplay = qualityDisplay
                         });
                     }
                 }
@@ -460,6 +550,75 @@ namespace OrgnTransplant
             }
         }
 
+        // Clear all data from database
+        private void ClearDatabase_Click(object sender, RoutedEventArgs e)
+        {
+            var result = MessageBox.Show(
+                "⚠️ ВНИМАНИЕ! ⚠️\n\n" +
+                "Това действие ще изтрие ВСИЧКИ донори и съобщения от базата данни!\n\n" +
+                "Това действие НЕ МОЖЕ да бъде отменено!\n\n" +
+                "Сигурни ли сте, че искате да продължите?",
+                "Изтриване на всички данни",
+                MessageBoxButton.YesNo,
+                MessageBoxImage.Warning);
+
+            if (result == MessageBoxResult.Yes)
+            {
+                // Second confirmation
+                var secondConfirm = MessageBox.Show(
+                    "Това е последната проверка!\n\n" +
+                    "Натиснете ДА за окончателно изтриване на всички данни.",
+                    "Потвърждение",
+                    MessageBoxButton.YesNo,
+                    MessageBoxImage.Exclamation);
+
+                if (secondConfirm == MessageBoxResult.Yes)
+                {
+                    try
+                    {
+                        // Delete all donors
+                        using (var connection = DatabaseHelper.GetConnection())
+                        {
+                            connection.Open();
+
+                            // Delete all messages first (foreign key constraint)
+                            using (var cmd = new MySqlCommand("DELETE FROM messages", connection))
+                            {
+                                cmd.ExecuteNonQuery();
+                            }
+
+                            // Delete all donors
+                            using (var cmd = new MySqlCommand("DELETE FROM Donors", connection))
+                            {
+                                cmd.ExecuteNonQuery();
+                            }
+                        }
+
+                        MessageBox.Show(
+                            "✅ Всички данни бяха изтрити успешно!\n\n" +
+                            "Базата данни е празна и готова за нови данни.",
+                            "Успех",
+                            MessageBoxButton.OK,
+                            MessageBoxImage.Information);
+
+                        // Refresh the current view
+                        if (DonorsViewGrid.Visibility == Visibility.Visible)
+                        {
+                            LoadDonors();
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show(
+                            $"Грешка при изтриване на данни:\n\n{ex.Message}",
+                            "Грешка",
+                            MessageBoxButton.OK,
+                            MessageBoxImage.Error);
+                    }
+                }
+            }
+        }
+
         // Request organ from donor
         private void RequestOrgan_Click(object sender, RoutedEventArgs e)
         {
@@ -540,6 +699,43 @@ namespace OrgnTransplant
                     MessageBoxImage.Error);
             }
         }
+
+        // Toggle showing expired organs
+        private void ShowExpiredToggle_Click(object sender, RoutedEventArgs e)
+        {
+            showExpiredOrgans = !showExpiredOrgans;
+
+            // Update button appearance and text
+            if (showExpiredOrgans)
+            {
+                ShowExpiredToggle.Content = "🚫 Скрий изтекли органи";
+                ShowExpiredToggle.Background = new System.Windows.Media.SolidColorBrush(
+                    (System.Windows.Media.Color)System.Windows.Media.ColorConverter.ConvertFromString("#E74C3C"));
+            }
+            else
+            {
+                ShowExpiredToggle.Content = "👁️ Покажи изтекли органи";
+                ShowExpiredToggle.Background = new System.Windows.Media.SolidColorBrush(
+                    (System.Windows.Media.Color)System.Windows.Media.ColorConverter.ConvertFromString("#95A5A6"));
+            }
+
+            // Reload the current view to apply filter
+            if (OrgansDetailsGrid.Visibility == Visibility.Visible)
+            {
+                // Get the current organ name from the title
+                string currentTitle = OrganDetailsTitle.Text;
+                if (currentTitle.Contains("Всички"))
+                {
+                    ShowOrganDetails(null); // Reload all organs
+                }
+                else
+                {
+                    // Extract organ name from title "Налични донори за X"
+                    string organName = currentTitle.Replace("Налични донори за ", "").Trim();
+                    ShowOrganDetails(organName);
+                }
+            }
+        }
     }
 
     // ViewModel for DataGrid display
@@ -590,5 +786,49 @@ namespace OrgnTransplant
         public string Hospital => donor.Hospital;
         public string OrgansForDonation => donor.OrgansForDonation;
         public DateTime DateOfBirth => donor.DateOfBirth;
+
+        // Display organ harvest time
+        public string HarvestTimeDisplay
+        {
+            get
+            {
+                if (donor.OrganHarvestTime == DateTime.MinValue)
+                    return "N/A";
+
+                TimeSpan elapsed = DateTime.Now - donor.OrganHarvestTime;
+                if (elapsed.TotalHours < 1)
+                    return $"Преди {(int)elapsed.TotalMinutes} мин";
+                else if (elapsed.TotalHours < 24)
+                    return $"Преди {(int)elapsed.TotalHours} ч";
+                else if (elapsed.TotalDays < 2)
+                    return "Преди 1 ден";
+                else
+                    return $"Преди {(int)elapsed.TotalDays} дни";
+            }
+        }
+
+        // Display organ quality
+        public string QualityDisplay
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(donor.OrganQuality))
+                    return "N/A";
+
+                switch (donor.OrganQuality.ToLower())
+                {
+                    case "excellent":
+                        return "⭐ Отлично";
+                    case "good":
+                        return "✓ Добро";
+                    case "fair":
+                        return "◐ Задоволително";
+                    case "poor":
+                        return "✗ Лошо";
+                    default:
+                        return donor.OrganQuality;
+                }
+            }
+        }
     }
 }

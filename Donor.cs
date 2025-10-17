@@ -20,7 +20,26 @@ namespace OrgnTransplant
         public string Medications { get; set; }
         public string Surgeries { get; set; }
         public string InfectiousDiseases { get; set; }
+        public string InfectiousDiseasesOther { get; set; } // For "Other" option details
         public string OrgansForDonation { get; set; }
         public DateTime RegistrationDate { get; set; }
+
+        // Donor type and deceased donor specific fields
+        public string DonorType { get; set; } // "Living" or "Deceased"
+        public DateTime? DateOfDeath { get; set; } // Only for deceased donors
+        public string CauseOfDeath { get; set; } // Only for deceased donors
+        public string FamilyConsentGivenBy { get; set; } // Name of family member who gave consent
+        public string FamilyRelationship { get; set; } // Relationship to deceased (e.g., spouse, son, daughter)
+        public string FamilyContactPhone { get; set; } // Contact phone of family member
+        public string AdditionalNotes { get; set; } // Other notes/information
+
+        // Organ viability fields
+        public DateTime OrganHarvestTime { get; set; }
+        public string OrganQuality { get; set; } // Excellent, Good, Fair, Poor
+
+        // Tracking fields
+        public string RegisteredBy { get; set; } // Name of medical staff who registered the donor
+        public DateTime CreatedAt { get; set; } // Timestamp of registration
+        public DateTime? UpdatedAt { get; set; } // Timestamp of last update
     }
 }

@@ -23,9 +23,13 @@ namespace OrgnTransplant
                     throw new Exception("Базата данни вече съдържа записи. Изтрийте ги първо с: DELETE FROM Donors;");
                 }
 
+                DateTime now = DateTime.Now;
+
                 List<Donor> testDonors = new List<Donor>
                 {
-                    // Донори от София
+                    // ========== ПОЧИНАЛИ ДОНОРИ (DECEASED) ==========
+
+                    // Починал донор 1 - София (Спешна трансплантация - 2 часа)
                     new Donor {
                         FullName = "Иван Петров Георгиев",
                         Hospital = "УМБАЛ Александровска - София",
@@ -33,13 +37,197 @@ namespace OrgnTransplant
                         Gender = "Мъж",
                         NationalId = "8503154321",
                         Phone = "0888123456",
-                        Email = "ivan.petrov@email.com",
+                        Email = "",
                         Address = "ул. Витоша 15, София",
                         BloodType = "A",
                         RhFactor = "Положителен",
                         InfectiousDiseases = "Няма",
-                        OrgansForDonation = "Сърце, Бял дроб"
+                        InfectiousDiseasesOther = "",
+                        OrgansForDonation = "Сърце, Бял дроб",
+                        OrganHarvestTime = now.AddHours(-2),
+                        OrganQuality = "Excellent",
+                        DonorType = "Deceased",
+                        DateOfDeath = now.AddHours(-3),
+                        CauseOfDeath = "Тежка черепно-мозъчна травма след ПТП",
+                        FamilyConsentGivenBy = "Мария Петрова Георгиева",
+                        FamilyRelationship = "Съпруг/а",
+                        FamilyContactPhone = "0888999111",
+                        AdditionalNotes = "Спешна трансплантация - органите са в отлично състояние",
+                        RegisteredBy = "Д-р Мария Иванова",
+                        CreatedAt = now.AddHours(-2)
                     },
+
+                    // Починал донор 2 - София (5 часа)
+                    new Donor {
+                        FullName = "Георги Стефанов Николов",
+                        Hospital = "Военномедицинска академия - София",
+                        DateOfBirth = new DateTime(1978, 11, 8),
+                        Gender = "Мъж",
+                        NationalId = "7811083456",
+                        Phone = "0889111222",
+                        Email = "",
+                        Address = "ул. Цар Борис 23, София",
+                        BloodType = "B",
+                        RhFactor = "Положителен",
+                        InfectiousDiseases = "Няма",
+                        InfectiousDiseasesOther = "",
+                        OrgansForDonation = "Черен дроб, Панкреас",
+                        OrganHarvestTime = now.AddHours(-5),
+                        OrganQuality = "Excellent",
+                        DonorType = "Deceased",
+                        DateOfDeath = now.AddHours(-6),
+                        CauseOfDeath = "Мозъчен инсулт",
+                        FamilyConsentGivenBy = "Стефан Георгиев Николов",
+                        FamilyRelationship = "Син",
+                        FamilyContactPhone = "0889222333",
+                        AdditionalNotes = "Семейството дава пълно съгласие за донорство",
+                        RegisteredBy = "Д-р Петър Димитров",
+                        CreatedAt = now.AddHours(-5)
+                    },
+
+                    // Починал донор 3 - Пловдив (20 часа - изтича скоро за Бял дроб)
+                    new Donor {
+                        FullName = "Димитър Христов Петков",
+                        Hospital = "УМБАЛ Св. Георги - Пловдив",
+                        DateOfBirth = new DateTime(1988, 5, 12),
+                        Gender = "Мъж",
+                        NationalId = "8805126789",
+                        Phone = "0886222333",
+                        Email = "",
+                        Address = "ул. Марица 67, Пловдив",
+                        BloodType = "A",
+                        RhFactor = "Отрицателен",
+                        InfectiousDiseases = "Няма",
+                        InfectiousDiseasesOther = "",
+                        OrgansForDonation = "Бъбрек, Бял дроб",
+                        OrganHarvestTime = now.AddHours(-5).AddMinutes(-30), // 5.5 часа
+                        OrganQuality = "Good",
+                        DonorType = "Deceased",
+                        DateOfDeath = now.AddHours(-6).AddMinutes(-30),
+                        CauseOfDeath = "Сърдечна недостатъчност",
+                        FamilyConsentGivenBy = "Христина Христова Петкова",
+                        FamilyRelationship = "Съпруг/а",
+                        FamilyContactPhone = "0886333444",
+                        AdditionalNotes = "Бял дроб близо до изтичане на годност (6 часа лимит)",
+                        RegisteredBy = "Д-р Иван Стоянов",
+                        CreatedAt = now.AddHours(-5).AddMinutes(-30)
+                    },
+
+                    // Починал донор 4 - Варна (18 часа - с инфекция "Друго")
+                    new Donor {
+                        FullName = "Стефан Атанасов Кирилов",
+                        Hospital = "УМБАЛ Св. Марина - Варна",
+                        DateOfBirth = new DateTime(1983, 12, 25),
+                        Gender = "Мъж",
+                        NationalId = "8312259012",
+                        Phone = "0884444555",
+                        Email = "",
+                        Address = "ул. Черно море 89, Варна",
+                        BloodType = "O",
+                        RhFactor = "Отрицателен",
+                        InfectiousDiseases = "Друго",
+                        InfectiousDiseasesOther = "Леко възпаление на горните дихателни пътища - прекарано преди 2 седмици",
+                        OrgansForDonation = "Черен дроб",
+                        OrganHarvestTime = now.AddHours(-18),
+                        OrganQuality = "Good",
+                        DonorType = "Deceased",
+                        DateOfDeath = now.AddHours(-19),
+                        CauseOfDeath = "Удавяне",
+                        FamilyConsentGivenBy = "Атанас Кирилов Атанасов",
+                        FamilyRelationship = "Брат",
+                        FamilyContactPhone = "0884555666",
+                        AdditionalNotes = "Прекарано леко респираторно заболяване - не засяга качеството на черния дроб",
+                        RegisteredBy = "Д-р Елена Тодорова",
+                        CreatedAt = now.AddHours(-18)
+                    },
+
+                    // Починал донор 5 - Бургас (3 часа - много свеж)
+                    new Donor {
+                        FullName = "Николай Василев Стоянов",
+                        Hospital = "УМБАЛ Бургас АД - Бургас",
+                        DateOfBirth = new DateTime(1987, 8, 7),
+                        Gender = "Мъж",
+                        NationalId = "8708072345",
+                        Phone = "0882666777",
+                        Email = "",
+                        Address = "ул. Александровска 34, Бургас",
+                        BloodType = "A",
+                        RhFactor = "Положителен",
+                        InfectiousDiseases = "Няма",
+                        InfectiousDiseasesOther = "",
+                        OrgansForDonation = "Сърце, Бял дроб",
+                        OrganHarvestTime = now.AddHours(-3),
+                        OrganQuality = "Excellent",
+                        DonorType = "Deceased",
+                        DateOfDeath = now.AddHours(-4),
+                        CauseOfDeath = "Инфаркт на миокарда",
+                        FamilyConsentGivenBy = "Десислава Василева Стоянова",
+                        FamilyRelationship = "Дъщеря",
+                        FamilyContactPhone = "0882777888",
+                        AdditionalNotes = "Много свежи органи - отлично състояние",
+                        RegisteredBy = "Д-р Георги Петров",
+                        CreatedAt = now.AddHours(-3)
+                    },
+
+                    // Починал донор 6 - Русе (10 часа)
+                    new Donor {
+                        FullName = "Петър Димитров Стефанов",
+                        Hospital = "УМБАЛ Канев - Русе",
+                        DateOfBirth = new DateTime(1981, 6, 20),
+                        Gender = "Мъж",
+                        NationalId = "8106204567",
+                        Phone = "0880888999",
+                        Email = "",
+                        Address = "ул. Дунавска 56, Русе",
+                        BloodType = "AB",
+                        RhFactor = "Положителен",
+                        InfectiousDiseases = "Няма",
+                        InfectiousDiseasesOther = "",
+                        OrgansForDonation = "Черен дроб, Панкреас",
+                        OrganHarvestTime = now.AddHours(-10),
+                        OrganQuality = "Good",
+                        DonorType = "Deceased",
+                        DateOfDeath = now.AddHours(-11),
+                        CauseOfDeath = "Мозъчен кръвоизлив",
+                        FamilyConsentGivenBy = "Мариана Димитрова Стефанова",
+                        FamilyRelationship = "Съпруг/а",
+                        FamilyContactPhone = "0880999000",
+                        AdditionalNotes = "Средна годност - трябва да се транспланира скоро",
+                        RegisteredBy = "Д-р Николай Иванов",
+                        CreatedAt = now.AddHours(-10)
+                    },
+
+                    // Починал донор 7 - Пловдив (25 часа - изтича за бъбреци)
+                    new Donor {
+                        FullName = "Васил Тодоров Николов",
+                        Hospital = "УМБАЛ Пулмед - Пловдив",
+                        DateOfBirth = new DateTime(1986, 1, 28),
+                        Gender = "Мъж",
+                        NationalId = "8601286789",
+                        Phone = "0888222333",
+                        Email = "",
+                        Address = "ул. Цар Симеон 12, Пловдив",
+                        BloodType = "A",
+                        RhFactor = "Положителен",
+                        InfectiousDiseases = "Няма",
+                        InfectiousDiseasesOther = "",
+                        OrgansForDonation = "Бъбрек",
+                        OrganHarvestTime = now.AddHours(-25),
+                        OrganQuality = "Fair",
+                        DonorType = "Deceased",
+                        DateOfDeath = now.AddHours(-26),
+                        CauseOfDeath = "Белодробна емболия",
+                        FamilyConsentGivenBy = "Надежда Атанасова Димитрова",
+                        FamilyRelationship = "Родител",
+                        FamilyContactPhone = "0888333444",
+                        AdditionalNotes = "Бъбрекът е близо до края на годността (36 часа лимит) - качество Fair",
+                        RegisteredBy = "Д-р Стефан Георгиев",
+                        CreatedAt = now.AddHours(-25)
+                    },
+
+                    // ========== ЖИВИ ДОНОРИ (LIVING) ==========
+
+                    // Жив донор 1 - София (регистриран преди 30 дни)
                     new Donor {
                         FullName = "Мария Иванова Димитрова",
                         Hospital = "МБАЛ Св. Анна - София",
@@ -52,38 +240,22 @@ namespace OrgnTransplant
                         BloodType = "O",
                         RhFactor = "Положителен",
                         InfectiousDiseases = "Няма",
-                        OrgansForDonation = "Бъбрек"
-                    },
-                    new Donor {
-                        FullName = "Георги Стефанов Николов",
-                        Hospital = "Военномедицинска академия - София",
-                        DateOfBirth = new DateTime(1978, 11, 8),
-                        Gender = "Мъж",
-                        NationalId = "7811083456",
-                        Phone = "0889111222",
-                        Email = "georgi.stefanov@email.com",
-                        Address = "ул. Цар Борис 23, София",
-                        BloodType = "B",
-                        RhFactor = "Положителен",
-                        InfectiousDiseases = "Няма",
-                        OrgansForDonation = "Черен дроб, Панкреас"
+                        InfectiousDiseasesOther = "",
+                        OrgansForDonation = "Бъбрек",
+                        OrganHarvestTime = DateTime.MinValue,
+                        OrganQuality = "",
+                        DonorType = "Living",
+                        DateOfDeath = null,
+                        CauseOfDeath = "",
+                        FamilyConsentGivenBy = "",
+                        FamilyRelationship = "",
+                        FamilyContactPhone = "",
+                        AdditionalNotes = "Доброволна регистрация - желае да дари бъбрек след смърт",
+                        RegisteredBy = "Мед. сестра Елена Петкова",
+                        CreatedAt = now.AddDays(-30)
                     },
 
-                    // Донори от Пловдив
-                    new Donor {
-                        FullName = "Димитър Христов Петков",
-                        Hospital = "УМБАЛ Св. Георги - Пловдив",
-                        DateOfBirth = new DateTime(1988, 5, 12),
-                        Gender = "Мъж",
-                        NationalId = "8805126789",
-                        Phone = "0886222333",
-                        Email = "dimitar.hristov@email.com",
-                        Address = "ул. Марица 67, Пловдив",
-                        BloodType = "A",
-                        RhFactor = "Отрицателен",
-                        InfectiousDiseases = "Няма",
-                        OrgansForDonation = "Бъбрек, Бял дроб"
-                    },
+                    // Жив донор 2 - Пловдив (регистриран преди 15 дни)
                     new Donor {
                         FullName = "Елена Тодорова Василева",
                         Hospital = "УМБАЛ Пулмед - Пловдив",
@@ -96,24 +268,22 @@ namespace OrgnTransplant
                         BloodType = "AB",
                         RhFactor = "Положителен",
                         InfectiousDiseases = "Няма",
-                        OrgansForDonation = "Сърце"
+                        InfectiousDiseasesOther = "",
+                        OrgansForDonation = "Сърце, Бъбрек",
+                        OrganHarvestTime = DateTime.MinValue,
+                        OrganQuality = "",
+                        DonorType = "Living",
+                        DateOfDeath = null,
+                        CauseOfDeath = "",
+                        FamilyConsentGivenBy = "",
+                        FamilyRelationship = "",
+                        FamilyContactPhone = "",
+                        AdditionalNotes = "Млада донорка - регистрирана след посещение на кампания",
+                        RegisteredBy = "Мед. сестра Надя Георгиева",
+                        CreatedAt = now.AddDays(-15)
                     },
 
-                    // Донори от Варна
-                    new Donor {
-                        FullName = "Стефан Атанасов Кирилов",
-                        Hospital = "УМБАЛ Св. Марина - Варна",
-                        DateOfBirth = new DateTime(1983, 12, 25),
-                        Gender = "Мъж",
-                        NationalId = "8312259012",
-                        Phone = "0884444555",
-                        Email = "stefan.atanasov@email.com",
-                        Address = "ул. Черно море 89, Варна",
-                        BloodType = "O",
-                        RhFactor = "Отрицателен",
-                        InfectiousDiseases = "Няма",
-                        OrgansForDonation = "Черен дроб"
-                    },
+                    // Жив донор 3 - Варна (регистриран преди 7 дни)
                     new Donor {
                         FullName = "Анна Георгиева Петрова",
                         Hospital = "МБАЛ Св. Анна - Варна",
@@ -126,269 +296,19 @@ namespace OrgnTransplant
                         BloodType = "B",
                         RhFactor = "Положителен",
                         InfectiousDiseases = "Няма",
-                        OrgansForDonation = "Бъбрек, Панкреас"
-                    },
-
-                    // Донори от Бургас
-                    new Donor {
-                        FullName = "Николай Василев Стоянов",
-                        Hospital = "УМБАЛ Бургас АД - Бургас",
-                        DateOfBirth = new DateTime(1987, 8, 7),
-                        Gender = "Мъж",
-                        NationalId = "8708072345",
-                        Phone = "0882666777",
-                        Email = "nikolay.vasilev@email.com",
-                        Address = "ул. Александровска 34, Бургас",
-                        BloodType = "A",
-                        RhFactor = "Положителен",
-                        InfectiousDiseases = "Няма",
-                        OrgansForDonation = "Сърце, Бял дроб"
-                    },
-                    new Donor {
-                        FullName = "Десислава Петкова Иванова",
-                        Hospital = "МБАЛ Бургасмед - Бургас",
-                        DateOfBirth = new DateTime(1993, 2, 14),
-                        Gender = "Жена",
-                        NationalId = "9302143456",
-                        Phone = "0881777888",
-                        Email = "desislava.petkova@email.com",
-                        Address = "бул. Демокрация 78, Бургас",
-                        BloodType = "O",
-                        RhFactor = "Положителен",
-                        InfectiousDiseases = "Няма",
-                        OrgansForDonation = "Бъбрек"
-                    },
-
-                    // Донори от Русе
-                    new Donor {
-                        FullName = "Петър Димитров Стефанов",
-                        Hospital = "УМБАЛ Канев - Русе",
-                        DateOfBirth = new DateTime(1981, 6, 20),
-                        Gender = "Мъж",
-                        NationalId = "8106204567",
-                        Phone = "0880888999",
-                        Email = "petar.dimitrov@email.com",
-                        Address = "ул. Дунавска 56, Русе",
-                        BloodType = "AB",
-                        RhFactor = "Положителен",
-                        InfectiousDiseases = "Няма",
-                        OrgansForDonation = "Черен дроб, Панкреас"
-                    },
-                    new Donor {
-                        FullName = "Мариана Христова Георгиева",
-                        Hospital = "УМБАЛ Медика - Русе",
-                        DateOfBirth = new DateTime(1994, 10, 5),
-                        Gender = "Жена",
-                        NationalId = "9410055678",
-                        Phone = "0889000111",
-                        Email = "mariana.hristova@email.com",
-                        Address = "бул. Липник 23, Русе",
-                        BloodType = "B",
-                        RhFactor = "Отрицателен",
-                        InfectiousDiseases = "Няма",
-                        OrgansForDonation = "Сърце, Бъбрек"
-                    },
-
-                    // Донори от Стара Загора
-                    new Donor {
-                        FullName = "Васил Тодоров Николов",
-                        Hospital = "УМБАЛ Проф. д-р Стоян Киркович - Стара Загора",
-                        DateOfBirth = new DateTime(1986, 1, 28),
-                        Gender = "Мъж",
-                        NationalId = "8601286789",
-                        Phone = "0888222333",
-                        Email = "vasil.todorov@email.com",
-                        Address = "ул. Цар Симеон 12, Стара Загора",
-                        BloodType = "A",
-                        RhFactor = "Положителен",
-                        InfectiousDiseases = "Няма",
-                        OrgansForDonation = "Бял дроб, Тимус"
-                    },
-                    new Donor {
-                        FullName = "Надежда Атанасова Димитрова",
-                        Hospital = "МБАЛ Тракия - Стара Загора",
-                        DateOfBirth = new DateTime(1991, 3, 17),
-                        Gender = "Жена",
-                        NationalId = "9103177890",
-                        Phone = "0887333444",
-                        Email = "nadejda.atanasova@email.com",
-                        Address = "бул. Патриарх Евтимий 45, Стара Загора",
-                        BloodType = "O",
-                        RhFactor = "Положителен",
-                        InfectiousDiseases = "Няма",
-                        OrgansForDonation = "Бъбрек"
-                    },
-
-                    // Донори от Плевен
-                    new Donor {
-                        FullName = "Христо Георгиев Петров",
-                        Hospital = "УМБАЛ Д-р Георги Странски - Плевен",
-                        DateOfBirth = new DateTime(1984, 9, 11),
-                        Gender = "Мъж",
-                        NationalId = "8409118901",
-                        Phone = "0886444555",
-                        Email = "hristo.georgiev@email.com",
-                        Address = "ул. Васил Левски 67, Плевен",
-                        BloodType = "B",
-                        RhFactor = "Положителен",
-                        InfectiousDiseases = "Няма",
-                        OrgansForDonation = "Черен дроб"
-                    },
-                    new Donor {
-                        FullName = "Йорданка Николова Стефанова",
-                        Hospital = "МБАЛ Сърце и Мозък - Плевен",
-                        DateOfBirth = new DateTime(1989, 12, 3),
-                        Gender = "Жена",
-                        NationalId = "8912039012",
-                        Phone = "0885555666",
-                        Email = "yordanka.nikolova@email.com",
-                        Address = "бул. Русе 89, Плевен",
-                        BloodType = "AB",
-                        RhFactor = "Отрицателен",
-                        InfectiousDiseases = "Няма",
-                        OrgansForDonation = "Сърце, Панкреас"
-                    },
-
-                    // Допълнителни донори
-                    new Donor {
-                        FullName = "Александър Стоянов Димитров",
-                        Hospital = "УМБАЛ Св. Петка - Велико Търново",
-                        DateOfBirth = new DateTime(1982, 7, 15),
-                        Gender = "Мъж",
-                        NationalId = "8207151234",
-                        Phone = "0884666777",
-                        Email = "aleksandar.stoyanov@email.com",
-                        Address = "ул. Цар Асен 34, Велико Търново",
-                        BloodType = "A",
-                        RhFactor = "Положителен",
-                        InfectiousDiseases = "Няма",
-                        OrgansForDonation = "Бъбрек, Бял дроб"
-                    },
-                    new Donor {
-                        FullName = "Силвия Петрова Христова",
-                        Hospital = "МБАЛ Д-р Стефан Черкезов - Велико Търново",
-                        DateOfBirth = new DateTime(1996, 11, 22),
-                        Gender = "Жена",
-                        NationalId = "9611222345",
-                        Phone = "0883777888",
-                        Email = "silviya.petrova@email.com",
-                        Address = "бул. България 12, Велико Търново",
-                        BloodType = "O",
-                        RhFactor = "Положителен",
-                        InfectiousDiseases = "Няма",
-                        OrgansForDonation = "Черен дроб"
-                    },
-                    new Donor {
-                        FullName = "Тодор Иванов Георгиев",
-                        Hospital = "УМБАЛ Д-р Панчо Владигеров - Шумен",
-                        DateOfBirth = new DateTime(1980, 4, 9),
-                        Gender = "Мъж",
-                        NationalId = "8004093456",
-                        Phone = "0882888999",
-                        Email = "todor.ivanov@email.com",
-                        Address = "ул. Мадара 56, Шумен",
-                        BloodType = "B",
-                        RhFactor = "Положителен",
-                        InfectiousDiseases = "Няма",
-                        OrgansForDonation = "Сърце, Стомах"
-                    },
-                    new Donor {
-                        FullName = "Красимира Димитрова Василева",
-                        Hospital = "МБАЛ Д-р Симеон Кехайов - Шумен",
-                        DateOfBirth = new DateTime(1993, 8, 25),
-                        Gender = "Жена",
-                        NationalId = "9308254567",
-                        Phone = "0881999000",
-                        Email = "krasimira.dimitrova@email.com",
-                        Address = "бул. Славянски 78, Шумен",
-                        BloodType = "A",
-                        RhFactor = "Отрицателен",
-                        InfectiousDiseases = "Няма",
-                        OrgansForDonation = "Бъбрек"
-                    },
-                    new Donor {
-                        FullName = "Борислав Петков Николов",
-                        Hospital = "МБАЛ Добрич АД - Добрич",
-                        DateOfBirth = new DateTime(1987, 2, 28),
-                        Gender = "Мъж",
-                        NationalId = "8702285678",
-                        Phone = "0880111222",
-                        Email = "borislav.petkov@email.com",
-                        Address = "ул. Добруджа 23, Добрич",
-                        BloodType = "O",
-                        RhFactor = "Положителен",
-                        InfectiousDiseases = "Няма",
-                        OrgansForDonation = "Черен дроб, Панкреас, Артерия"
-                    },
-                    new Donor {
-                        FullName = "Даниела Стефанова Тодорова",
-                        Hospital = "УМБАЛ Царица Йоанна - ИСУЛ - София",
-                        DateOfBirth = new DateTime(1990, 6, 12),
-                        Gender = "Жена",
-                        NationalId = "9006126789",
-                        Phone = "0889333444",
-                        Email = "daniela.stefanova@email.com",
-                        Address = "ул. Студентски град 45, София",
-                        BloodType = "AB",
-                        RhFactor = "Положителен",
-                        InfectiousDiseases = "Няма",
-                        OrgansForDonation = "Сърце, Бъбрек, Черен дроб"
-                    },
-                    new Donor {
-                        FullName = "Емил Василев Атанасов",
-                        Hospital = "УМБАЛ Св. Иван Рилски - София",
-                        DateOfBirth = new DateTime(1985, 10, 20),
-                        Gender = "Мъж",
-                        NationalId = "8510207890",
-                        Phone = "0888444555",
-                        Email = "emil.vasilev@email.com",
-                        Address = "бул. Драган Цанков 12, София",
-                        BloodType = "A",
-                        RhFactor = "Положителен",
-                        InfectiousDiseases = "Няма",
-                        OrgansForDonation = "Бял дроб, Тимус"
-                    },
-                    new Donor {
-                        FullName = "Ивелина Христова Петкова",
-                        Hospital = "УМБАЛ Каспела - Пловдив",
-                        DateOfBirth = new DateTime(1992, 1, 15),
-                        Gender = "Жена",
-                        NationalId = "9201158901",
-                        Phone = "0887555666",
-                        Email = "ivelina.hristova@email.com",
-                        Address = "ул. Христо Ботев 34, Пловдив",
-                        BloodType = "B",
-                        RhFactor = "Отрицателен",
-                        InfectiousDiseases = "Няма",
-                        OrgansForDonation = "Бъбрек, Панкреас"
-                    },
-                    new Donor {
-                        FullName = "Радослав Георгиев Стоянов",
-                        Hospital = "УМБАЛ Медика - Варна",
-                        DateOfBirth = new DateTime(1988, 3, 8),
-                        Gender = "Мъж",
-                        NationalId = "8803089012",
-                        Phone = "0886666777",
-                        Email = "radoslav.georgiev@email.com",
-                        Address = "ул. Цар Освободител 67, Варна",
-                        BloodType = "O",
-                        RhFactor = "Отрицателен",
-                        InfectiousDiseases = "Няма",
-                        OrgansForDonation = "Черва, Стомах"
-                    },
-                    new Donor {
-                        FullName = "Теодора Николова Димитрова",
-                        Hospital = "МБАЛ Св. Анна - Бургас",
-                        DateOfBirth = new DateTime(1994, 7, 30),
-                        Gender = "Жена",
-                        NationalId = "9407301234",
-                        Phone = "0885777888",
-                        Email = "teodora.nikolova@email.com",
-                        Address = "бул. Христо Ботев 89, Бургас",
-                        BloodType = "A",
-                        RhFactor = "Положителен",
-                        InfectiousDiseases = "Няма",
-                        OrgansForDonation = "Артерия, Тимус"
+                        InfectiousDiseasesOther = "",
+                        OrgansForDonation = "Бъбрек, Панкреас",
+                        OrganHarvestTime = DateTime.MinValue,
+                        OrganQuality = "",
+                        DonorType = "Living",
+                        DateOfDeath = null,
+                        CauseOfDeath = "",
+                        FamilyConsentGivenBy = "",
+                        FamilyRelationship = "",
+                        FamilyContactPhone = "",
+                        AdditionalNotes = "Активист за донорство - мотивирана донорка",
+                        RegisteredBy = "Д-р Христо Василев",
+                        CreatedAt = now.AddDays(-7)
                     }
                 };
 
@@ -401,6 +321,8 @@ namespace OrgnTransplant
                 }
 
                 Console.WriteLine($"Успешно заредени {count} тестови донора!");
+                Console.WriteLine($"  - {testDonors.FindAll(d => d.DonorType == "Deceased").Count} починали донори");
+                Console.WriteLine($"  - {testDonors.FindAll(d => d.DonorType == "Living").Count} живи донори");
             }
             catch (Exception ex)
             {
