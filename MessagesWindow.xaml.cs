@@ -270,6 +270,7 @@ namespace OrgnTransplant
                 if (message.Status == MessageStatus.Accepted)
                 {
                     string deliveryText = message.DeliveryOption == DeliveryOption.WithDriver ? "🚗 С шофьор" :
+                                         message.DeliveryOption == DeliveryOption.WithHelicopter ? "🚁 С хеликоптер" :
                                          message.DeliveryOption == DeliveryOption.PickupRequired ? "🚶 Вземане лично" :
                                          "⚠️ Неуточнено";
 
@@ -476,6 +477,7 @@ namespace OrgnTransplant
                 if (message.Status == MessageStatus.Accepted)
                 {
                     string deliveryText = message.DeliveryOption == DeliveryOption.WithDriver ? "🚗 С шофьор" :
+                                         message.DeliveryOption == DeliveryOption.WithHelicopter ? "🚁 С хеликоптер" :
                                          message.DeliveryOption == DeliveryOption.PickupRequired ? "🚶 Вземане лично" :
                                          "⚠️ Неуточнено";
 

@@ -138,6 +138,21 @@
                             </StackPanel>
                         </RadioButton>
 
+                        <RadioButton x:Name="WithHelicopterRadio"
+                                     GroupName="DeliveryOptions"
+                                     Style="{StaticResource RadioCard}">
+                            <StackPanel>
+                                <TextBlock Text="🚁 С хеликоптер - спешна въздушна доставка"
+                                           FontSize="15"
+                                           FontWeight="SemiBold"
+                                           Foreground="{StaticResource TextPrimaryBrush}"/>
+                                <TextBlock Text="Най-бърз вариант за критични случаи - въздушна медицинска транспортировка"
+                                           FontSize="12"
+                                           Foreground="{StaticResource TextSecondaryBrush}"
+                                           Margin="0,5,0,0"/>
+                            </StackPanel>
+                        </RadioButton>
+
                         <RadioButton x:Name="PickupRequiredRadio"
                                      GroupName="DeliveryOptions"
                                      Style="{StaticResource RadioCard}">

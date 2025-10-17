@@ -16,6 +16,11 @@ namespace OrgnTransplant
         WithDriver,
 
         /// <summary>
+        /// С хеликоптер - спешна въздушна доставка
+        /// </summary>
+        WithHelicopter,
+
+        /// <summary>
         /// Необходимо е вземане - клиентът трябва да дойде лично
         /// </summary>
         PickupRequired

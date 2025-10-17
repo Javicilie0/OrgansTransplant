@@ -28,6 +28,7 @@ namespace OrgnTransplant
 
                 // Скриваме опциите за доставка при отхвърляне
                 WithDriverRadio.Visibility = Visibility.Collapsed;
+                WithHelicopterRadio.Visibility = Visibility.Collapsed;
                 PickupRequiredRadio.Visibility = Visibility.Collapsed;
 
                 // Променяме текста на лейбъла
@@ -64,6 +65,10 @@ namespace OrgnTransplant
                     if (WithDriverRadio.IsChecked == true)
                     {
                         deliveryOption = DeliveryOption.WithDriver;
+                    }
+                    else if (WithHelicopterRadio.IsChecked == true)
+                    {
+                        deliveryOption = DeliveryOption.WithHelicopter;
                     }
                     else if (PickupRequiredRadio.IsChecked == true)
                     {
