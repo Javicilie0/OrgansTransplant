@@ -124,7 +124,7 @@ namespace OrgnTransplant
         }
 
         // Show Organs Details View
-        private void ShowOrganDetails(string organName)
+        private async void ShowOrganDetails(string organName)
         {
             try
             {
@@ -155,16 +155,8 @@ namespace OrgnTransplant
                                 string organTrimmed = organ.Trim();
                                 string iconPath = GetOrganIconPath(organTrimmed);
 
-                                // Calculate distance
-                                double distance = 0;
-                                if (currentHospital != null && !string.IsNullOrEmpty(donor.Hospital))
-                                {
-                                    var donorHospital = HospitalLocation.GetByName(donor.Hospital);
-                                    if (donorHospital != null)
-                                    {
-                                        distance = HospitalLocation.CalculateDistance(currentHospital, donorHospital);
-                                    }
-                                }
+                                // Set distance to -1 initially (will be loaded asynchronously)
+                                double distance = -1;
 
                                 // Calculate viability information
                                 string viabilityTimeDisplay = OrganViability.FormatRemainingTime(organTrimmed, donor.OrganHarvestTime);
@@ -228,16 +220,8 @@ namespace OrgnTransplant
                     {
                         string iconPath = GetOrganIconPath(organName);
 
-                        // Calculate distance
-                        double distance = 0;
-                        if (currentHospital != null && !string.IsNullOrEmpty(donor.Hospital))
-                        {
-                            var donorHospital = HospitalLocation.GetByName(donor.Hospital);
-                            if (donorHospital != null)
-                            {
-                                distance = HospitalLocation.CalculateDistance(currentHospital, donorHospital);
-                            }
-                        }
+                        // Set distance to -1 initially (will be loaded asynchronously)
+                        double distance = -1;
 
                         // Calculate viability information
                         string viabilityTimeDisplay = OrganViability.FormatRemainingTime(organName, donor.OrganHarvestTime);
@@ -290,16 +274,27 @@ namespace OrgnTransplant
                     }
                 }
 
-                // Sort by distance (closest first)
-                organsList = organsList.OrderBy(o => o.DistanceKm).ToList();
-
-                // Update UI
+                // Update UI immediately with organs (distances will be N/A initially)
                 OrgansItemsControl.ItemsSource = organsList;
                 TotalOrgansText.Text = organsList.Count.ToString();
 
+                // Load distances asynchronously in the background
+                if (currentHospital != null)
+                {
+                    _ = LoadDistancesAsync(organsList, currentHospital);
+                }
+
                 if (organsList.Count > 0)
                 {
-                    ClosestDistanceText.Text = $"{organsList[0].DistanceKm:F0} км";
+                    var closestOrgan = organsList.FirstOrDefault(o => o.DistanceKm >= 0);
+                    if (closestOrgan != null)
+                    {
+                        ClosestDistanceText.Text = $"{closestOrgan.DistanceKm:F0} км";
+                    }
+                    else
+                    {
+                        ClosestDistanceText.Text = "N/A";
+                    }
                 }
                 else
                 {
@@ -317,6 +312,51 @@ namespace OrgnTransplant
             {
                 MessageBox.Show($"Грешка при зареждане на органи: {ex.Message}",
                     "Грешка", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        // Load distances asynchronously for all organs
+        private async System.Threading.Tasks.Task LoadDistancesAsync(List<OrganInfo> organsList, HospitalLocation currentHospital)
+        {
+            try
+            {
+                // Load distances in parallel
+                var tasks = organsList.Select(async organ =>
+                {
+                    if (!string.IsNullOrEmpty(organ.Hospital) && organ.Hospital != "N/A")
+                    {
+                        var donorHospital = HospitalLocation.GetByName(organ.Hospital);
+                        if (donorHospital != null)
+                        {
+                            organ.DistanceKm = await HospitalLocation.GetRoadDistanceAsync(currentHospital, donorHospital);
+                        }
+                    }
+                }).ToArray();
+
+                await System.Threading.Tasks.Task.WhenAll(tasks);
+
+                // Sort by distance and update UI on the main thread
+                await Dispatcher.InvokeAsync(() =>
+                {
+                    var sortedList = organsList.OrderBy(o => o.DistanceKm < 0 ? double.MaxValue : o.DistanceKm).ToList();
+                    OrgansItemsControl.ItemsSource = null;
+                    OrgansItemsControl.ItemsSource = sortedList;
+
+                    // Update closest distance
+                    var closestOrgan = sortedList.FirstOrDefault(o => o.DistanceKm >= 0);
+                    if (closestOrgan != null)
+                    {
+                        ClosestDistanceText.Text = $"{closestOrgan.DistanceKm:F0} км";
+                    }
+                    else
+                    {
+                        ClosestDistanceText.Text = "N/A";
+                    }
+                });
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Error loading distances: {ex.Message}");
             }
         }
 

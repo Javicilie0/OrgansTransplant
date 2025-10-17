@@ -9,6 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="nul" />
     <None Remove="Resources\icons\Abdomen\Intestine.png" />
     <None Remove="Resources\icons\Abdomen\Kidney.png" />
     <None Remove="Resources\icons\Abdomen\Liver.png" />

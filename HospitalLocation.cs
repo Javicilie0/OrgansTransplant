@@ -19,31 +19,43 @@ namespace OrgnTransplant
             Longitude = longitude;
         }
 
-        // Haversine formula for calculating distance between two GPS coordinates
-        public static double CalculateDistance(HospitalLocation from, HospitalLocation to)
+        // Get road distance using OSRM API
+        public static async System.Threading.Tasks.Task<double> GetRoadDistanceAsync(HospitalLocation from, HospitalLocation to)
         {
             if (from == null || to == null)
-                return double.MaxValue;
+                return -1; // Return -1 to indicate invalid input
 
-            const double R = 6371; // Radius of Earth in kilometers
+            try
+            {
+                using (var client = new System.Net.Http.HttpClient())
+                {
+                    client.Timeout = TimeSpan.FromSeconds(10);
 
-            double lat1 = DegreesToRadians(from.Latitude);
-            double lat2 = DegreesToRadians(to.Latitude);
-            double deltaLat = DegreesToRadians(to.Latitude - from.Latitude);
-            double deltaLon = DegreesToRadians(to.Longitude - from.Longitude);
+                    string url = $"https://router.project-osrm.org/route/v1/driving/{from.Longitude.ToString(System.Globalization.CultureInfo.InvariantCulture)},{from.Latitude.ToString(System.Globalization.CultureInfo.InvariantCulture)};{to.Longitude.ToString(System.Globalization.CultureInfo.InvariantCulture)},{to.Latitude.ToString(System.Globalization.CultureInfo.InvariantCulture)}?overview=false";
 
-            double a = Math.Sin(deltaLat / 2) * Math.Sin(deltaLat / 2) +
-                      Math.Cos(lat1) * Math.Cos(lat2) *
-                      Math.Sin(deltaLon / 2) * Math.Sin(deltaLon / 2);
+                    var response = await client.GetStringAsync(url);
 
-            double c = 2 * Math.Atan2(Math.Sqrt(a), Math.Sqrt(1 - a));
+                    // Parse JSON response to get distance
+                    var json = System.Text.Json.JsonDocument.Parse(response);
+                    if (json.RootElement.TryGetProperty("routes", out var routes) && routes.GetArrayLength() > 0)
+                    {
+                        var firstRoute = routes[0];
+                        if (firstRoute.TryGetProperty("distance", out var distance))
+                        {
+                            return distance.GetDouble() / 1000.0; // Convert meters to kilometers
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                // Log error for debugging
+                System.Diagnostics.Debug.WriteLine($"Error getting road distance: {ex.Message}");
+                // Return -1 to indicate error
+                return -1;
+            }
 
-            return R * c; // Distance in kilometers
-        }
-
-        private static double DegreesToRadians(double degrees)
-        {
-            return degrees * Math.PI / 180;
+            return -1;
         }
 
         // Static list of all Bulgarian hospitals with GPS coordinates
