@@ -37,6 +37,9 @@ namespace OrgnTransplant
             NationalIdBox.TextChanged += NationalIdBox_TextChanged;
             PhoneBox.TextChanged += PhoneBox_TextChanged;
             EmailBox.TextChanged += EmailBox_TextChanged;
+            AddressBox.TextChanged += AddressBox_TextChanged;
+            FamilyConsentBox.TextChanged += FamilyConsentBox_TextChanged;
+            FamilyContactPhoneBox.TextChanged += FamilyContactPhoneBox_TextChanged;
             NationalIdBox.PreviewTextInput += NumericOnly_PreviewTextInput;
             PhoneBox.PreviewTextInput += NumericOnly_PreviewTextInput;
             FamilyContactPhoneBox.PreviewTextInput += NumericOnly_PreviewTextInput;
@@ -399,21 +402,21 @@ namespace OrgnTransplant
             // Check for at least 2 spaces (3 names)
             int spaceCount = name.Count(c => c == ' ');
 
-            // Check length (max 100 characters)
+            // Use InputValidator for name validation
             if (name.Length > 100)
             {
                 FullNameBox.Background = new SolidColorBrush(Color.FromRgb(255, 230, 230));
-                FullNameBox.ToolTip = "Твърде дълго име (макс. 100 символа)";
+                FullNameBox.ToolTip = InputValidator.GetValidationMessage("Име", "maxlength");
             }
             else if (spaceCount < 2)
             {
                 FullNameBox.Background = new SolidColorBrush(Color.FromRgb(255, 250, 200));
                 FullNameBox.ToolTip = "Моля, въведете три имена (име, презиме, фамилия)";
             }
-            else if (!Regex.IsMatch(name, @"^[а-яА-Яa-zA-Z\s]+$"))
+            else if (!InputValidator.IsValidName(name))
             {
                 FullNameBox.Background = new SolidColorBrush(Color.FromRgb(255, 230, 230));
-                FullNameBox.ToolTip = "Името може да съдържа само букви и интервали";
+                FullNameBox.ToolTip = InputValidator.GetValidationMessage("Име", "name");
             }
             else
             {
@@ -439,10 +442,10 @@ namespace OrgnTransplant
                 NationalIdBox.Background = new SolidColorBrush(Color.FromRgb(255, 250, 200));
                 NationalIdBox.ToolTip = $"ЕГН трябва да е 10 цифри (текущо: {egn.Length})";
             }
-            else if (!IsValidEGN(egn))
+            else if (!InputValidator.IsValidEGN(egn))
             {
                 NationalIdBox.Background = new SolidColorBrush(Color.FromRgb(255, 230, 230));
-                NationalIdBox.ToolTip = "Невалиден ЕГН (проверете контролната цифра)";
+                NationalIdBox.ToolTip = InputValidator.GetValidationMessage("ЕГН", "egn");
             }
             else
             {
@@ -530,13 +533,8 @@ namespace OrgnTransplant
                 return;
             }
 
-            // Bulgarian phone numbers: 10 digits or with +359
-            if (phone.Length < 9 || phone.Length > 13)
-            {
-                PhoneBox.Background = new SolidColorBrush(Color.FromRgb(255, 250, 200));
-                PhoneBox.ToolTip = "Телефонът трябва да е 10 цифри (напр. 0888123456)";
-            }
-            else if (phone.Length == 10 && phone.StartsWith("0"))
+            // Use InputValidator for phone validation
+            if (InputValidator.IsValidPhone(phone))
             {
                 PhoneBox.Background = new SolidColorBrush(Color.FromRgb(230, 255, 230));
                 PhoneBox.ToolTip = "Валиден телефонен номер ✓";
@@ -544,7 +542,7 @@ namespace OrgnTransplant
             else
             {
                 PhoneBox.Background = new SolidColorBrush(Color.FromRgb(255, 250, 200));
-                PhoneBox.ToolTip = "Формат: 0888123456";
+                PhoneBox.ToolTip = InputValidator.GetValidationMessage("Телефон", "phone");
             }
         }
 
@@ -560,23 +558,106 @@ namespace OrgnTransplant
                 return;
             }
 
-            // Email regex
-            string emailPattern = @"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$";
-
+            // Use InputValidator for email validation
             if (email.Length > 100)
             {
                 EmailBox.Background = new SolidColorBrush(Color.FromRgb(255, 230, 230));
-                EmailBox.ToolTip = "Твърде дълъг имейл (макс. 100 символа)";
+                EmailBox.ToolTip = InputValidator.GetValidationMessage("Имейл", "maxlength");
             }
-            else if (!Regex.IsMatch(email, emailPattern))
+            else if (!InputValidator.IsValidEmail(email))
             {
                 EmailBox.Background = new SolidColorBrush(Color.FromRgb(255, 250, 200));
-                EmailBox.ToolTip = "Невалиден формат на имейл (напр. example@domain.com)";
+                EmailBox.ToolTip = InputValidator.GetValidationMessage("Имейл", "email");
             }
             else
             {
                 EmailBox.Background = new SolidColorBrush(Color.FromRgb(230, 255, 230));
                 EmailBox.ToolTip = "Валиден имейл ✓";
+            }
+        }
+
+        // Validate address
+        private void AddressBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            string address = AddressBox.Text.Trim();
+
+            if (string.IsNullOrEmpty(address))
+            {
+                AddressBox.Background = Brushes.White;
+                AddressBox.ToolTip = null;
+                return;
+            }
+
+            // Check address length (minimum 10 characters for a valid address, max 200)
+            if (address.Length < 10)
+            {
+                AddressBox.Background = new SolidColorBrush(Color.FromRgb(255, 250, 200));
+                AddressBox.ToolTip = "Адресът е твърде кратък (мин. 10 символа)";
+            }
+            else if (address.Length > 200)
+            {
+                AddressBox.Background = new SolidColorBrush(Color.FromRgb(255, 230, 230));
+                AddressBox.ToolTip = "Адресът е твърде дълъг (макс. 200 символа)";
+            }
+            else if (!InputValidator.IsValidRequiredText(address, 10, 200))
+            {
+                AddressBox.Background = new SolidColorBrush(Color.FromRgb(255, 250, 200));
+                AddressBox.ToolTip = "Моля, въведете валиден адрес";
+            }
+            else
+            {
+                AddressBox.Background = new SolidColorBrush(Color.FromRgb(230, 255, 230));
+                AddressBox.ToolTip = "Валиден адрес ✓";
+            }
+        }
+
+        // Validate family consent name (for deceased donors)
+        private void FamilyConsentBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            string name = FamilyConsentBox.Text.Trim();
+
+            if (string.IsNullOrEmpty(name))
+            {
+                FamilyConsentBox.Background = Brushes.White;
+                FamilyConsentBox.ToolTip = null;
+                return;
+            }
+
+            // Use InputValidator for name validation
+            if (!InputValidator.IsValidName(name))
+            {
+                FamilyConsentBox.Background = new SolidColorBrush(Color.FromRgb(255, 250, 200));
+                FamilyConsentBox.ToolTip = InputValidator.GetValidationMessage("Име на роднина", "name");
+            }
+            else
+            {
+                FamilyConsentBox.Background = new SolidColorBrush(Color.FromRgb(230, 255, 230));
+                FamilyConsentBox.ToolTip = "Валидно име ✓";
+            }
+        }
+
+        // Validate family contact phone (for deceased donors)
+        private void FamilyContactPhoneBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            string phone = FamilyContactPhoneBox.Text.Trim();
+
+            if (string.IsNullOrEmpty(phone))
+            {
+                FamilyContactPhoneBox.Background = Brushes.White;
+                FamilyContactPhoneBox.ToolTip = null;
+                return;
+            }
+
+            // Use InputValidator for phone validation
+            if (InputValidator.IsValidPhone(phone))
+            {
+                FamilyContactPhoneBox.Background = new SolidColorBrush(Color.FromRgb(230, 255, 230));
+                FamilyContactPhoneBox.ToolTip = "Валиден телефонен номер ✓";
+            }
+            else
+            {
+                FamilyContactPhoneBox.Background = new SolidColorBrush(Color.FromRgb(255, 250, 200));
+                FamilyContactPhoneBox.ToolTip = InputValidator.GetValidationMessage("Телефон", "phone");
             }
         }
 
@@ -725,10 +806,10 @@ namespace OrgnTransplant
             // Comprehensive validation
             List<string> errors = new List<string>();
 
-            // Validate full name
+            // Validate full name using InputValidator
             if (string.IsNullOrEmpty(fullName))
             {
-                errors.Add("• Три имена е задължително поле");
+                errors.Add("• " + InputValidator.GetValidationMessage("Три имена", "required"));
             }
             else if (fullName.Count(c => c == ' ') < 2)
             {
@@ -736,43 +817,35 @@ namespace OrgnTransplant
             }
             else if (fullName.Length > 100)
             {
-                errors.Add("• Името е твърде дълго (макс. 100 символа)");
+                errors.Add("• " + InputValidator.GetValidationMessage("Име", "maxlength"));
             }
-            else if (!Regex.IsMatch(fullName, @"^[а-яА-Яa-zA-Z\s]+$"))
+            else if (!InputValidator.IsValidName(fullName))
             {
-                errors.Add("• Името може да съдържа само букви и интервали");
+                errors.Add("• " + InputValidator.GetValidationMessage("Име", "name"));
             }
 
-            // Validate EGN
+            // Validate EGN using InputValidator
             if (string.IsNullOrEmpty(nationalId))
             {
-                errors.Add("• ЕГН е задължително поле");
+                errors.Add("• " + InputValidator.GetValidationMessage("ЕГН", "required"));
             }
-            else if (nationalId.Length != 10)
+            else if (!InputValidator.IsValidEGN(nationalId))
             {
-                errors.Add("• ЕГН трябва да е точно 10 цифри");
-            }
-            else if (!IsValidEGN(nationalId))
-            {
-                errors.Add("• Невалиден ЕГН (проверете контролната цифра или датата)");
+                errors.Add("• " + InputValidator.GetValidationMessage("ЕГН", "egn"));
             }
 
-            // Validate date of birth
+            // Validate date of birth using InputValidator
             if (string.IsNullOrWhiteSpace(DOBBox.Text))
             {
-                errors.Add("• Дата на раждане е задължително поле");
+                errors.Add("• " + InputValidator.GetValidationMessage("Дата на раждане", "required"));
             }
             else if (!dob.HasValue)
             {
-                errors.Add("• Невалиден формат на дата на раждане (използвайте дд/мм/гггг)");
+                errors.Add("• " + InputValidator.GetValidationMessage("Дата на раждане", "date"));
             }
-            else if (dob.Value > DateTime.Now)
+            else if (!InputValidator.IsValidDateOfBirth(dob.Value))
             {
-                errors.Add("• Датата на раждане не може да бъде в бъдещето");
-            }
-            else if (dob.Value < new DateTime(1900, 1, 1))
-            {
-                errors.Add("• Невалидна дата на раждане");
+                errors.Add("• " + InputValidator.GetValidationMessage("Дата на раждане", "date"));
             }
 
             // Validate EGN date matches DOB
@@ -785,26 +858,34 @@ namespace OrgnTransplant
                 }
             }
 
-            // Validate phone
+            // Validate phone using InputValidator
             if (!string.IsNullOrEmpty(phone))
             {
-                if (phone.Length != 10 || !phone.StartsWith("0"))
+                if (!InputValidator.IsValidPhone(phone))
                 {
-                    errors.Add("• Невалиден телефонен номер (формат: 0888123456)");
+                    errors.Add("• " + InputValidator.GetValidationMessage("Телефон", "phone"));
                 }
             }
 
-            // Validate email
+            // Validate email using InputValidator
             if (!string.IsNullOrEmpty(email))
             {
-                string emailPattern = @"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$";
-                if (!Regex.IsMatch(email, emailPattern))
+                if (email.Length > 100)
                 {
-                    errors.Add("• Невалиден формат на имейл");
+                    errors.Add("• " + InputValidator.GetValidationMessage("Имейл", "maxlength"));
                 }
-                else if (email.Length > 100)
+                else if (!InputValidator.IsValidEmail(email))
                 {
-                    errors.Add("• Имейлът е твърде дълъг (макс. 100 символа)");
+                    errors.Add("• " + InputValidator.GetValidationMessage("Имейл", "email"));
+                }
+            }
+
+            // Validate address using InputValidator
+            if (!string.IsNullOrEmpty(address))
+            {
+                if (!InputValidator.IsValidRequiredText(address, 10, 200))
+                {
+                    errors.Add("• Адресът трябва да е между 10 и 200 символа");
                 }
             }
 
@@ -862,7 +943,11 @@ namespace OrgnTransplant
 
                 if (string.IsNullOrWhiteSpace(familyConsentGivenBy))
                 {
-                    errors.Add("• Име на роднина (който дава съгласие) е задължително поле");
+                    errors.Add("• " + InputValidator.GetValidationMessage("Име на роднина", "required"));
+                }
+                else if (!InputValidator.IsValidName(familyConsentGivenBy))
+                {
+                    errors.Add("• " + InputValidator.GetValidationMessage("Име на роднина", "name"));
                 }
 
                 if (FamilyRelationshipBox.SelectedItem == null)
@@ -877,11 +962,11 @@ namespace OrgnTransplant
 
                 if (string.IsNullOrWhiteSpace(familyContactPhone))
                 {
-                    errors.Add("• Телефон на роднина е задължително поле");
+                    errors.Add("• " + InputValidator.GetValidationMessage("Телефон на роднина", "required"));
                 }
-                else if (familyContactPhone.Length != 10 || !familyContactPhone.StartsWith("0"))
+                else if (!InputValidator.IsValidPhone(familyContactPhone))
                 {
-                    errors.Add("• Невалиден телефон на роднина (формат: 0888123456)");
+                    errors.Add("• " + InputValidator.GetValidationMessage("Телефон на роднина", "phone"));
                 }
 
                 // Validate organ harvest fields for deceased donors

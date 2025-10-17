@@ -6,7 +6,21 @@ namespace OrgnTransplant
 {
     public class DatabaseHelper
     {
-        private static string connectionString = "Server=shortline.proxy.rlwy.net;Port=12048;Database=railway;User Id=root;Password=sOUKfiykIGLXorMFXWXMFxbhXLBxnmRr;";
+        private static string connectionString;
+
+        static DatabaseHelper()
+        {
+            try
+            {
+                connectionString = ConfigurationHelper.GetConnectionString();
+                Logger.LogInfo("Database connection string loaded successfully");
+            }
+            catch (Exception ex)
+            {
+                Logger.LogError("Failed to load connection string", ex);
+                throw;
+            }
+        }
 
         // Get database connection
         public static MySqlConnection GetConnection()
@@ -36,6 +50,7 @@ namespace OrgnTransplant
         {
             try
             {
+                Logger.LogInfo($"Saving new donor: {donor.FullName} (EGN: {donor.NationalId})");
                 using (MySqlConnection conn = new MySqlConnection(connectionString))
                 {
                     conn.Open();
@@ -81,10 +96,12 @@ namespace OrgnTransplant
                         cmd.ExecuteNonQuery();
                     }
                 }
+                Logger.LogInfo($"Donor saved successfully: {donor.FullName}");
                 return true;
             }
             catch (Exception ex)
             {
+                Logger.LogError($"Failed to save donor: {donor.FullName}", ex);
                 throw new Exception($"Грешка при записване на донор: {ex.Message}");
             }
         }
