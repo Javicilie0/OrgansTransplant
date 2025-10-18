@@ -73,6 +73,11 @@ namespace OrgnTransplant
         public string ResponseText { get; set; }
 
         /// <summary>
+        /// Дали съобщението е прочетено от получателя
+        /// </summary>
+        public bool IsRead { get; set; }
+
+        /// <summary>
         /// Конструктор по подразбиране
         /// </summary>
         public Message()
@@ -81,6 +86,7 @@ namespace OrgnTransplant
             DeliveryOption = DeliveryOption.NotSpecified;
             Status = MessageStatus.Pending;
             CreatedAt = DateTime.Now;
+            IsRead = false;
         }
     }
 }

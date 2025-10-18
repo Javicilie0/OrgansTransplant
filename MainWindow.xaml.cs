@@ -41,6 +41,15 @@ namespace OrgnTransplant
             FilterHospitalBox.SelectionChanged += (s, e) => ApplyFilters();
             FilterBloodTypeBox.SelectionChanged += (s, e) => ApplyFilters();
             FilterOrganBox.SelectionChanged += (s, e) => ApplyFilters();
+
+            // Update messages badge initially and periodically
+            UpdateMessagesBadge();
+
+            // Auto-refresh messages badge every 30 seconds
+            var timer = new System.Windows.Threading.DispatcherTimer();
+            timer.Interval = TimeSpan.FromSeconds(30);
+            timer.Tick += (s, e) => UpdateMessagesBadge();
+            timer.Start();
         }
 
         private void LoadHospitals()
@@ -402,6 +411,44 @@ namespace OrgnTransplant
 
             MessagesWindow messagesWindow = new MessagesWindow(CurrentHospital.Name);
             messagesWindow.ShowDialog();
+
+            // Update badge after viewing messages
+            UpdateMessagesBadge();
+        }
+
+        // Update the unread messages badge
+        private void UpdateMessagesBadge()
+        {
+            try
+            {
+                if (CurrentHospital == null)
+                {
+                    // Hide badge if no hospital selected
+                    MessagesBadge.Visibility = Visibility.Collapsed;
+                    return;
+                }
+
+                // Get unread message count
+                int unreadCount = MessagesHelper.GetUnreadMessagesCount(CurrentHospital.Name);
+
+                if (unreadCount > 0)
+                {
+                    // Show badge with count
+                    MessagesBadge.Visibility = Visibility.Visible;
+                    MessagesBadgeText.Text = unreadCount > 99 ? "99+" : unreadCount.ToString();
+                }
+                else
+                {
+                    // Hide badge if no unread messages
+                    MessagesBadge.Visibility = Visibility.Collapsed;
+                }
+            }
+            catch (Exception ex)
+            {
+                // Silently fail - don't show error to user for badge update
+                System.Diagnostics.Debug.WriteLine($"Error updating messages badge: {ex.Message}");
+                MessagesBadge.Visibility = Visibility.Collapsed;
+            }
         }
 
         // Back to Organs View
@@ -841,6 +888,37 @@ namespace OrgnTransplant
                     ShowOrganDetails(organName);
                 }
             }
+        }
+
+        // Custom Title Bar Event Handlers
+        private void TitleBar_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            if (e.ChangedButton == MouseButton.Left)
+            {
+                this.DragMove();
+            }
+        }
+
+        private void MinimizeWindow_Click(object sender, RoutedEventArgs e)
+        {
+            this.WindowState = WindowState.Minimized;
+        }
+
+        private void MaximizeWindow_Click(object sender, RoutedEventArgs e)
+        {
+            if (this.WindowState == WindowState.Maximized)
+            {
+                this.WindowState = WindowState.Normal;
+            }
+            else
+            {
+                this.WindowState = WindowState.Maximized;
+            }
+        }
+
+        private void CloseWindow_Click(object sender, RoutedEventArgs e)
+        {
+            this.Close();
         }
     }
 

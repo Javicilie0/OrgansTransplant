@@ -6,8 +6,12 @@
         xmlns:local="clr-namespace:OrgnTransplant"
         mc:Ignorable="d"
         Title="Система за управление на трансплантации"
-        Height="800" Width="1250"
-        WindowStartupLocation="CenterScreen">
+        Height="800" Width="1400"
+        WindowStartupLocation="CenterScreen"
+        WindowStyle="None"
+        AllowsTransparency="True"
+        Background="Transparent"
+        ResizeMode="CanResizeWithGrip">
 
     <Window.Resources>
         <!-- Storyboards and Animations -->
@@ -23,13 +27,13 @@
         <!-- Modern Navigation Button Style -->
         <Style x:Key="NavButton" TargetType="Button">
             <Setter Property="Background" Value="Transparent"/>
-            <Setter Property="Foreground" Value="#E0E0E0"/>
+            <Setter Property="Foreground" Value="#64748B"/>
             <Setter Property="BorderThickness" Value="0"/>
-            <Setter Property="Padding" Value="20,15"/>
-            <Setter Property="Margin" Value="0,5,0,0"/>
+            <Setter Property="Padding" Value="18,14"/>
+            <Setter Property="Margin" Value="0,6,0,0"/>
             <Setter Property="Cursor" Value="Hand"/>
-            <Setter Property="FontSize" Value="15"/>
-            <Setter Property="FontWeight" Value="Medium"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
             <Setter Property="HorizontalContentAlignment" Value="Left"/>
             <Setter Property="RenderTransformOrigin" Value="0.5,0.5"/>
             <Setter Property="RenderTransform">
@@ -44,7 +48,9 @@
                                 Background="{TemplateBinding Background}"
                                 CornerRadius="12"
                                 Padding="{TemplateBinding Padding}"
-                                Margin="10,0">
+                                Margin="15,0"
+                                BorderBrush="#E5E7EB"
+                                BorderThickness="1">
                             <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
                                             VerticalAlignment="Center"/>
                         </Border>
@@ -53,15 +59,22 @@
             </Setter>
             <Style.Triggers>
                 <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="Background" Value="{StaticResource PurpleGradient}"/>
+                    <Setter Property="Background">
+                        <Setter.Value>
+                            <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                <GradientStop Color="#3B82F6" Offset="0"/>
+                                <GradientStop Color="#60A5FA" Offset="1"/>
+                            </LinearGradientBrush>
+                        </Setter.Value>
+                    </Setter>
                     <Setter Property="Foreground" Value="White"/>
                     <Trigger.EnterActions>
                         <BeginStoryboard>
                             <Storyboard>
                                 <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)"
-                                               To="1.03" Duration="0:0:0.2"/>
+                                               To="1.02" Duration="0:0:0.2"/>
                                 <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)"
-                                               To="1.03" Duration="0:0:0.2"/>
+                                               To="1.02" Duration="0:0:0.2"/>
                             </Storyboard>
                         </BeginStoryboard>
                     </Trigger.EnterActions>
@@ -145,21 +158,101 @@
         </Style>
     </Window.Resources>
 
-    <!-- Main Background with Gradient -->
-    <Grid Background="{StaticResource BackgroundGradient}">
+    <!-- Main Window Border -->
+    <Border Background="{StaticResource BackgroundGradient}"
+            CornerRadius="15"
+            BorderBrush="#E5E7EB"
+            BorderThickness="1">
+        <Border.Effect>
+            <DropShadowEffect Color="#000000" BlurRadius="30" ShadowDepth="0" Opacity="0.15"/>
+        </Border.Effect>
 
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="280"/>
-            <ColumnDefinition Width="*"/>
-        </Grid.ColumnDefinitions>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="50"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
 
-        <!-- Modern Sidebar with Glass Morphism -->
-        <Border Grid.Column="0" Margin="15,15,0,15" CornerRadius="25">
-            <Border.Background>
-                <SolidColorBrush Color="#1A1A2E" Opacity="0.7"/>
-            </Border.Background>
+            <!-- Custom Title Bar -->
+            <Border Grid.Row="0"
+                    Background="#FFFFFF"
+                    CornerRadius="15,15,0,0"
+                    BorderBrush="#E5E7EB"
+                    BorderThickness="0,0,0,1"
+                    MouseLeftButtonDown="TitleBar_MouseLeftButtonDown">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+
+                    <!-- App Icon and Title -->
+                    <StackPanel Grid.Column="0" Orientation="Horizontal" Margin="20,0,0,0" VerticalAlignment="Center">
+                        <Ellipse Width="32" Height="32" Margin="0,0,12,0">
+                            <Ellipse.Fill>
+                                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                    <GradientStop Color="#3B82F6" Offset="0"/>
+                                    <GradientStop Color="#60A5FA" Offset="1"/>
+                                </LinearGradientBrush>
+                            </Ellipse.Fill>
+                        </Ellipse>
+                        <TextBlock Text="OrganTransplant"
+                                   FontSize="16"
+                                   FontWeight="SemiBold"
+                                   Foreground="#1E293B"
+                                   VerticalAlignment="Center"/>
+                    </StackPanel>
+
+                    <!-- Window Controls -->
+                    <StackPanel Grid.Column="2" Orientation="Horizontal" Margin="0,0,10,0">
+                        <Button Content="─"
+                                Click="MinimizeWindow_Click"
+                                Style="{StaticResource {x:Type Button}}"
+                                Width="40" Height="40"
+                                Background="Transparent"
+                                BorderThickness="0"
+                                Foreground="#64748B"
+                                FontSize="16"
+                                FontWeight="Bold"
+                                Cursor="Hand"/>
+                        <Button Content="□"
+                                Click="MaximizeWindow_Click"
+                                Style="{StaticResource {x:Type Button}}"
+                                Width="40" Height="40"
+                                Background="Transparent"
+                                BorderThickness="0"
+                                Foreground="#64748B"
+                                FontSize="14"
+                                Cursor="Hand"/>
+                        <Button Content="✕"
+                                Click="CloseWindow_Click"
+                                Style="{StaticResource {x:Type Button}}"
+                                Width="40" Height="40"
+                                Background="Transparent"
+                                BorderThickness="0"
+                                Foreground="#EF4444"
+                                FontSize="16"
+                                FontWeight="Bold"
+                                Cursor="Hand"/>
+                    </StackPanel>
+                </Grid>
+            </Border>
+
+            <!-- Main Content Area -->
+            <Grid Grid.Row="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="300"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+        <!-- Modern Sidebar -->
+        <Border Grid.Column="0" Margin="20,20,10,20" CornerRadius="20"
+                Background="#FFFFFF"
+                BorderBrush="#E5E7EB"
+                BorderThickness="1">
             <Border.Effect>
-                <DropShadowEffect BlurRadius="40" ShadowDepth="0" Opacity="0.6" Color="#000000"/>
+                <DropShadowEffect BlurRadius="20" ShadowDepth="0" Opacity="0.08" Color="#000000"/>
             </Border.Effect>
 
             <Grid>
@@ -170,37 +263,42 @@
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
 
-                <!-- Logo Section with Glassmorphism -->
-                <Border Grid.Row="0" Padding="25" Margin="15,15,15,20">
+                <!-- Logo Section -->
+                <Border Grid.Row="0" Padding="25" Margin="20,25,20,20">
                     <StackPanel>
-                        <Border Width="80" Height="80" CornerRadius="40" Margin="0,0,0,15"
-                                Background="{StaticResource PurpleGradient}">
+                        <Border Width="70" Height="70" CornerRadius="35" Margin="0,0,0,15">
+                            <Border.Background>
+                                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                    <GradientStop Color="#3B82F6" Offset="0"/>
+                                    <GradientStop Color="#60A5FA" Offset="1"/>
+                                </LinearGradientBrush>
+                            </Border.Background>
                             <Border.Effect>
-                                <DropShadowEffect BlurRadius="20" ShadowDepth="0" Opacity="0.8" Color="#667EEA"/>
+                                <DropShadowEffect BlurRadius="15" ShadowDepth="0" Opacity="0.25" Color="#3B82F6"/>
                             </Border.Effect>
-                            <TextBlock Text="⚕" FontSize="48" Foreground="White"
+                            <TextBlock Text="⚕" FontSize="40" Foreground="White"
                                      HorizontalAlignment="Center" VerticalAlignment="Center"/>
                         </Border>
-                        <TextBlock Text="OrganTransplant" FontSize="22" FontWeight="Bold"
-                                 Foreground="White" HorizontalAlignment="Center"
-                                 Margin="0,0,0,5"/>
-                        <TextBlock Text="Система за управление" FontSize="11"
-                                 Foreground="#B8B8B8" HorizontalAlignment="Center"/>
+                        <TextBlock Text="Система за управление" FontSize="13"
+                                 Foreground="#64748B" HorizontalAlignment="Center"
+                                 FontWeight="Medium"/>
                     </StackPanel>
                 </Border>
 
-                <!-- Hospital Selection with Modern Design -->
-                <Border Grid.Row="1" Margin="15,0,15,20" Padding="20" CornerRadius="18"
-                        Background="{StaticResource PurpleGradient}">
+                <!-- Hospital Selection -->
+                <Border Grid.Row="1" Margin="20,0,20,20" Padding="18" CornerRadius="15"
+                        Background="#F8FAFC"
+                        BorderBrush="#E5E7EB"
+                        BorderThickness="1">
                     <StackPanel>
-                        <TextBlock Text="🏥 Вашата болница" FontSize="13" FontWeight="SemiBold"
-                                 Foreground="White" Margin="0,0,0,12" Opacity="0.9"/>
+                        <TextBlock Text="🏥 Вашата болница" FontSize="12" FontWeight="SemiBold"
+                                 Foreground="#64748B" Margin="0,0,0,10"/>
 
                         <ComboBox x:Name="HospitalSelectionBox"
                                 FontSize="13"
-                                Foreground="White"
-                                Background="#1A1A2E"
-                                BorderBrush="White"
+                                Foreground="#1E293B"
+                                Background="#FFFFFF"
+                                BorderBrush="#CBD5E1"
                                 BorderThickness="1"
                                 Padding="12,10"
                                 SelectionChanged="HospitalSelectionBox_SelectionChanged">
@@ -234,7 +332,7 @@
                                                                                         VerticalAlignment="Center"/>
                                                                         <Path Grid.Column="1"
                                                                             Data="M 0 0 L 4 4 L 8 0 Z"
-                                                                            Fill="White"
+                                                                            Fill="#64748B"
                                                                             HorizontalAlignment="Center"
                                                                             VerticalAlignment="Center"/>
                                                                     </Grid>
@@ -256,11 +354,14 @@
                                                          AllowsTransparency="True"
                                                          Focusable="False"
                                                          PopupAnimation="Slide">
-                                                        <Border Background="#1A1A2E"
-                                                              BorderBrush="White"
+                                                        <Border Background="#FFFFFF"
+                                                              BorderBrush="#CBD5E1"
                                                               BorderThickness="1"
                                                               CornerRadius="10"
                                                               MaxHeight="300">
+                                                            <Border.Effect>
+                                                                <DropShadowEffect BlurRadius="15" ShadowDepth="0" Opacity="0.1" Color="#000000"/>
+                                                            </Border.Effect>
                                                             <ScrollViewer>
                                                                 <StackPanel IsItemsHost="True"/>
                                                             </ScrollViewer>
@@ -272,15 +373,17 @@
                                     </Setter>
                                 </Style>
                                 <Style TargetType="ComboBoxItem">
-                                    <Setter Property="Foreground" Value="White"/>
+                                    <Setter Property="Foreground" Value="#1E293B"/>
                                     <Setter Property="Background" Value="Transparent"/>
                                     <Setter Property="Padding" Value="10,8"/>
                                     <Style.Triggers>
                                         <Trigger Property="IsMouseOver" Value="True">
-                                            <Setter Property="Background" Value="#667EEA"/>
+                                            <Setter Property="Background" Value="#F1F5F9"/>
+                                            <Setter Property="Foreground" Value="#3B82F6"/>
                                         </Trigger>
                                         <Trigger Property="IsSelected" Value="True">
-                                            <Setter Property="Background" Value="#764BA2"/>
+                                            <Setter Property="Background" Value="#DBEAFE"/>
+                                            <Setter Property="Foreground" Value="#3B82F6"/>
                                         </Trigger>
                                     </Style.Triggers>
                                 </Style>
@@ -290,8 +393,7 @@
                         <TextBlock x:Name="HospitalCityText"
                                  Text="Изберете болница"
                                  FontSize="11"
-                                 Foreground="White"
-                                 Opacity="0.7"
+                                 Foreground="#94A3B8"
                                  Margin="0,10,0,0"/>
                     </StackPanel>
                 </Border>
@@ -310,9 +412,32 @@
                           Click="viewAll_Click"
                           Style="{StaticResource NavButton}"/>
 
-                    <Button Content="📬  Поща"
-                          Click="ViewMessages_Click"
-                          Style="{StaticResource NavButton}"/>
+                    <Button Click="ViewMessages_Click"
+                          Style="{StaticResource NavButton}">
+                        <Grid>
+                            <TextBlock Text="📬  Поща" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+                            <!-- Notification Badge -->
+                            <Border x:Name="MessagesBadge"
+                                    Width="22" Height="22"
+                                    CornerRadius="11"
+                                    Background="#E74C3C"
+                                    HorizontalAlignment="Left"
+                                    VerticalAlignment="Top"
+                                    Margin="85,-6,0,0"
+                                    Visibility="Collapsed">
+                                <Border.Effect>
+                                    <DropShadowEffect BlurRadius="8" ShadowDepth="2" Opacity="0.6" Color="#E74C3C"/>
+                                </Border.Effect>
+                                <TextBlock x:Name="MessagesBadgeText"
+                                         Text="0"
+                                         FontSize="11"
+                                         FontWeight="Bold"
+                                         Foreground="White"
+                                         HorizontalAlignment="Center"
+                                         VerticalAlignment="Center"/>
+                            </Border>
+                        </Grid>
+                    </Button>
                 </StackPanel>
 
                 <!-- Bottom Buttons -->
@@ -1277,6 +1402,8 @@
             </Grid>
             <!-- End of Organs Details View -->
 
+            </Grid>
         </Grid>
     </Grid>
+    </Border>
 </Window>
