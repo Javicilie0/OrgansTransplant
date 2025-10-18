@@ -187,22 +187,7 @@
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
 
-                    <!-- App Icon and Title -->
-                    <StackPanel Grid.Column="0" Orientation="Horizontal" Margin="20,0,0,0" VerticalAlignment="Center">
-                        <Ellipse Width="32" Height="32" Margin="0,0,12,0">
-                            <Ellipse.Fill>
-                                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                                    <GradientStop Color="#3B82F6" Offset="0"/>
-                                    <GradientStop Color="#60A5FA" Offset="1"/>
-                                </LinearGradientBrush>
-                            </Ellipse.Fill>
-                        </Ellipse>
-                        <TextBlock Text="OrganTransplant"
-                                   FontSize="16"
-                                   FontWeight="SemiBold"
-                                   Foreground="#1E293B"
-                                   VerticalAlignment="Center"/>
-                    </StackPanel>
+                    
 
                     <!-- Window Controls -->
                     <StackPanel Grid.Column="2" Orientation="Horizontal" Margin="0,0,10,0">
