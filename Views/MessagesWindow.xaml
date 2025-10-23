@@ -1,0 +1,195 @@
+<Window x:Class="OrgnTransplant.Views.MessagesWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="📬 Поща" Height="750" Width="1300"
+        WindowStartupLocation="CenterScreen"
+        Background="{StaticResource BackgroundGradient}">
+
+    <Window.Resources>
+        <!-- Tab Button Style -->
+        <Style x:Key="TabButton" TargetType="Button">
+            <Setter Property="Background" Value="#20FFFFFF"/>
+            <Setter Property="Foreground" Value="{StaticResource TextSecondaryBrush}"/>
+            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Padding" Value="35,15"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}"
+                                CornerRadius="12,12,0,0"
+                                Padding="{TemplateBinding Padding}"
+                                Margin="0,0,8,0">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#30FFFFFF"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <!-- Active Tab Style -->
+        <Style x:Key="ActiveTabButton" TargetType="Button" BasedOn="{StaticResource TabButton}">
+            <Setter Property="Background" Value="{StaticResource CyanGradient}"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Effect">
+                <Setter.Value>
+                    <DropShadowEffect Color="#4FACFE" BlurRadius="20" ShadowDepth="0" Opacity="0.6"/>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Message Card Style -->
+        <Style x:Key="MessageCard" TargetType="Border">
+            <Setter Property="Background" Value="#25FFFFFF"/>
+            <Setter Property="CornerRadius" Value="12"/>
+            <Setter Property="Padding" Value="20"/>
+            <Setter Property="Margin" Value="0,0,0,15"/>
+            <Setter Property="Effect">
+                <Setter.Value>
+                    <DropShadowEffect Color="#000000" BlurRadius="15" ShadowDepth="3" Opacity="0.15"/>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+
+    <Grid>
+        <!-- Header Bar with Gradient -->
+        <Border Height="100" VerticalAlignment="Top">
+            <Border.Background>
+                <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                    <GradientStop Color="#4FACFE" Offset="0"/>
+                    <GradientStop Color="#00F2FE" Offset="1"/>
+                </LinearGradientBrush>
+            </Border.Background>
+            <Border.Effect>
+                <DropShadowEffect Color="#000000" BlurRadius="20" ShadowDepth="5" Opacity="0.3"/>
+            </Border.Effect>
+            <Grid Margin="40,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                    <TextBlock Text="📬 ПОЩА"
+                               FontSize="32"
+                               FontWeight="Bold"
+                               Foreground="White">
+                        <TextBlock.Effect>
+                            <DropShadowEffect Color="#000000" BlurRadius="10" ShadowDepth="2" Opacity="0.3"/>
+                        </TextBlock.Effect>
+                    </TextBlock>
+                    <TextBlock x:Name="HospitalNameText"
+                               Text=""
+                               FontSize="14"
+                               Foreground="#E0FFFF"
+                               Margin="0,5,0,0"/>
+                </StackPanel>
+
+                <Button Grid.Column="1"
+                        Content="🔄 ОБНОВИ"
+                        Style="{StaticResource PrimaryButton}"
+                        Click="RefreshMessages_Click"
+                        VerticalAlignment="Center">
+                    <Button.Background>
+                        <SolidColorBrush Color="White" Opacity="0.3"/>
+                    </Button.Background>
+                </Button>
+            </Grid>
+        </Border>
+
+        <!-- Main Content Area -->
+        <Grid Margin="40,100,40,40">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <!-- Tab Navigation -->
+            <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,0">
+                <Button x:Name="InboxTabButton"
+                        Content="📥 Входящи"
+                        Style="{StaticResource ActiveTabButton}"
+                        Click="ShowInbox_Click"/>
+                <Button x:Name="OutboxTabButton"
+                        Content="📤 Изходящи"
+                        Style="{StaticResource TabButton}"
+                        Click="ShowOutbox_Click"/>
+            </StackPanel>
+
+            <!-- Content Container -->
+            <Border Grid.Row="1"
+                    Background="#20FFFFFF"
+                    CornerRadius="0,15,15,15"
+                    Padding="0">
+                <Border.Effect>
+                    <DropShadowEffect Color="#000000" BlurRadius="25" ShadowDepth="5" Opacity="0.2"/>
+                </Border.Effect>
+                <Grid>
+                    <!-- Inbox Messages -->
+                    <Grid x:Name="InboxGrid" Visibility="Visible">
+                        <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="30">
+                            <StackPanel x:Name="InboxMessagesPanel"/>
+                        </ScrollViewer>
+
+                        <!-- Empty State for Inbox -->
+                        <StackPanel x:Name="InboxEmptyState"
+                                    VerticalAlignment="Center"
+                                    HorizontalAlignment="Center"
+                                    Visibility="Collapsed">
+                            <TextBlock Text="📭"
+                                       FontSize="100"
+                                       HorizontalAlignment="Center"
+                                       Opacity="0.3"/>
+                            <TextBlock Text="Няма входящи съобщения"
+                                       FontSize="20"
+                                       Foreground="{StaticResource TextSecondaryBrush}"
+                                       HorizontalAlignment="Center"
+                                       Margin="0,15,0,0"/>
+                            <TextBlock Text="Когато получите нови заявки, те ще се появят тук"
+                                       FontSize="14"
+                                       Foreground="{StaticResource TextMutedBrush}"
+                                       HorizontalAlignment="Center"
+                                       Margin="0,8,0,0"/>
+                        </StackPanel>
+                    </Grid>
+
+                    <!-- Outbox Messages -->
+                    <Grid x:Name="OutboxGrid" Visibility="Collapsed">
+                        <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="30">
+                            <StackPanel x:Name="OutboxMessagesPanel"/>
+                        </ScrollViewer>
+
+                        <!-- Empty State for Outbox -->
+                        <StackPanel x:Name="OutboxEmptyState"
+                                    VerticalAlignment="Center"
+                                    HorizontalAlignment="Center"
+                                    Visibility="Collapsed">
+                            <TextBlock Text="📭"
+                                       FontSize="100"
+                                       HorizontalAlignment="Center"
+                                       Opacity="0.3"/>
+                            <TextBlock Text="Няма изходящи съобщения"
+                                       FontSize="20"
+                                       Foreground="{StaticResource TextSecondaryBrush}"
+                                       HorizontalAlignment="Center"
+                                       Margin="0,15,0,0"/>
+                            <TextBlock Text="Изпратените от вас заявки ще се показват тук"
+                                       FontSize="14"
+                                       Foreground="{StaticResource TextMutedBrush}"
+                                       HorizontalAlignment="Center"
+                                       Margin="0,8,0,0"/>
+                        </StackPanel>
+                    </Grid>
+                </Grid>
+            </Border>
+        </Grid>
+    </Grid>
+</Window>

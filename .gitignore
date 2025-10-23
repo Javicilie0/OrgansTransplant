@@ -369,4 +369,5 @@ App.config
 
 # Log files with potentially sensitive information
 Logs/
-*.log
+*.log.claude/
+.claude/
