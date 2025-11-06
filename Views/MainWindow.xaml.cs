@@ -30,6 +30,11 @@ namespace OrgnTransplant.Views
         public MainWindow()
         {
             InitializeComponent();
+
+            // Enable bitmap caching for better performance
+            System.Windows.Media.RenderOptions.SetBitmapScalingMode(this, System.Windows.Media.BitmapScalingMode.LowQuality);
+            this.CacheMode = new System.Windows.Media.BitmapCache { EnableClearType = false, RenderAtScale = 1, SnapsToDevicePixels = false };
+
             displayedDonors = new ObservableCollection<DonorViewModel>();
             DonorsDataGrid.ItemsSource = displayedDonors;
 

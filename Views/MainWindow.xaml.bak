@@ -86,6 +86,12 @@
                                 CornerRadius="24"
                                 Padding="20"
                                 BorderThickness="0">
+                            <Border.Effect>
+                                <DropShadowEffect BlurRadius="30"
+                                                  ShadowDepth="5"
+                                                  Opacity="0.15"
+                                                  Color="#000000"/>
+                            </Border.Effect>
                             <ContentPresenter/>
                         </Border>
                     </ControlTemplate>
@@ -355,6 +361,9 @@
                                                               BorderThickness="1"
                                                               CornerRadius="10"
                                                               MaxHeight="300">
+                                                            <Border.Effect>
+                                                                <DropShadowEffect BlurRadius="15" ShadowDepth="0" Opacity="0.1" Color="#000000"/>
+                                                            </Border.Effect>
                                                             <ScrollViewer Style="{StaticResource ModernScrollViewer}">
                                                                 <StackPanel IsItemsHost="True"/>
                                                             </ScrollViewer>
@@ -418,6 +427,9 @@
                                     VerticalAlignment="Top"
                                     Margin="85,-6,0,0"
                                     Visibility="Collapsed">
+                                <Border.Effect>
+                                    <DropShadowEffect BlurRadius="8" ShadowDepth="2" Opacity="0.6" Color="#E74C3C"/>
+                                </Border.Effect>
                                 <TextBlock x:Name="MessagesBadgeText"
                                          Text="0"
                                          FontSize="11"
@@ -728,11 +740,17 @@
                 <!-- Header -->
                 <Border Grid.Row="0" Padding="35,30" Margin="0,0,0,20" CornerRadius="25"
                         Background="{StaticResource PurpleGradient}">
+                    <Border.Effect>
+                        <DropShadowEffect BlurRadius="30" ShadowDepth="5" Opacity="0.3" Color="#667EEA"/>
+                    </Border.Effect>
                     <Grid>
                         <StackPanel>
                             <TextBlock Text="👥 Регистрирани донори"
                                        FontSize="32" FontWeight="Bold"
                                        Foreground="White">
+                                <TextBlock.Effect>
+                                    <DropShadowEffect BlurRadius="10" ShadowDepth="2" Opacity="0.5" Color="#000000"/>
+                                </TextBlock.Effect>
                             </TextBlock>
                             <TextBlock Text="Преглед, търсене и управление на регистрирани донори в системата"
                                        FontSize="15"
@@ -836,6 +854,9 @@
                                     <Border.Background>
                                         <SolidColorBrush Color="White" Opacity="0.95"/>
                                     </Border.Background>
+                                    <Border.Effect>
+                                        <DropShadowEffect BlurRadius="25" ShadowDepth="5" Opacity="0.15" Color="#000000"/>
+                                    </Border.Effect>
                                     <Grid>
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="Auto"/>
@@ -853,6 +874,9 @@
                                                         <GradientStop Color="#764BA2" Offset="1"/>
                                                     </LinearGradientBrush>
                                                 </Border.Background>
+                                                <Border.Effect>
+                                                    <DropShadowEffect BlurRadius="15" ShadowDepth="3" Opacity="0.3" Color="#667EEA"/>
+                                                </Border.Effect>
                                                 <TextBlock Text="👤"
                                                            FontSize="42"
                                                            HorizontalAlignment="Center"
@@ -867,6 +891,9 @@
                                                         <GradientStop Color="#F5576C" Offset="1"/>
                                                     </LinearGradientBrush>
                                                 </Border.Background>
+                                                <Border.Effect>
+                                                    <DropShadowEffect BlurRadius="10" ShadowDepth="2" Opacity="0.3" Color="#F5576C"/>
+                                                </Border.Effect>
                                                 <TextBlock Text="{Binding BloodTypeDisplay}"
                                                            FontSize="18"
                                                            FontWeight="Bold"
@@ -974,6 +1001,9 @@
                                                                     <GradientStop Color="#764BA2" Offset="1"/>
                                                                 </LinearGradientBrush>
                                                             </Border.Background>
+                                                            <Border.Effect>
+                                                                <DropShadowEffect BlurRadius="10" ShadowDepth="3" Opacity="0.3" Color="#667EEA"/>
+                                                            </Border.Effect>
                                                             <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
                                                         </Border>
                                                     </ControlTemplate>
@@ -996,6 +1026,9 @@
                                                         <Border Background="{TemplateBinding Background}"
                                                                 CornerRadius="12"
                                                                 Padding="{TemplateBinding Padding}">
+                                                            <Border.Effect>
+                                                                <DropShadowEffect BlurRadius="10" ShadowDepth="3" Opacity="0.3" Color="#E74C3C"/>
+                                                            </Border.Effect>
                                                             <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
                                                         </Border>
                                                     </ControlTemplate>
@@ -1022,11 +1055,17 @@
                 <!-- Header -->
                 <Border Grid.Row="0" Padding="35,30" Margin="0,0,0,20" CornerRadius="25"
                         Background="{StaticResource CyanGradient}">
+                    <Border.Effect>
+                        <DropShadowEffect BlurRadius="30" ShadowDepth="5" Opacity="0.3" Color="#4FACFE"/>
+                    </Border.Effect>
                     <Grid>
                         <StackPanel>
                             <TextBlock x:Name="OrganDetailsTitle" Text="🫀 Налични донори"
                                        FontSize="32" FontWeight="Bold"
                                        Foreground="White">
+                                <TextBlock.Effect>
+                                    <DropShadowEffect BlurRadius="10" ShadowDepth="2" Opacity="0.5" Color="#000000"/>
+                                </TextBlock.Effect>
                             </TextBlock>
                             <TextBlock Text="Списък на донорите, сортирани по близост до вашата болница"
                                        FontSize="15"
@@ -1072,6 +1111,9 @@
                                         <GradientStop Color="#00F2FE" Offset="1"/>
                                     </LinearGradientBrush>
                                 </Border.Background>
+                                <Border.Effect>
+                                    <DropShadowEffect BlurRadius="10" ShadowDepth="2" Opacity="0.3" Color="#4FACFE"/>
+                                </Border.Effect>
                                 <StackPanel Orientation="Horizontal">
                                     <TextBlock Text="📊 Общо: " FontSize="13" Foreground="White" Margin="0,0,8,0" FontWeight="SemiBold"/>
                                     <TextBlock x:Name="TotalOrgansText" Text="0" FontSize="13" FontWeight="Bold" Foreground="White"/>
@@ -1084,6 +1126,9 @@
                                         <GradientStop Color="#38F9D7" Offset="1"/>
                                     </LinearGradientBrush>
                                 </Border.Background>
+                                <Border.Effect>
+                                    <DropShadowEffect BlurRadius="10" ShadowDepth="2" Opacity="0.3" Color="#43E97B"/>
+                                </Border.Effect>
                                 <StackPanel Orientation="Horizontal">
                                     <TextBlock Text="📍 Най-близка: " FontSize="13" Foreground="White" Margin="0,0,8,0" FontWeight="SemiBold"/>
                                     <TextBlock x:Name="ClosestDistanceText" Text="N/A" FontSize="13" FontWeight="Bold" Foreground="White"/>
@@ -1126,6 +1171,9 @@
                                     <Border.Background>
                                         <SolidColorBrush Color="White" Opacity="0.95"/>
                                     </Border.Background>
+                                    <Border.Effect>
+                                        <DropShadowEffect BlurRadius="25" ShadowDepth="5" Opacity="0.15" Color="#000000"/>
+                                    </Border.Effect>
                                     <Grid>
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="150"/>
@@ -1238,6 +1286,9 @@
                                                         <GradientStop Color="#00F2FE" Offset="1"/>
                                                     </LinearGradientBrush>
                                                 </Border.Background>
+                                                <Border.Effect>
+                                                    <DropShadowEffect BlurRadius="15" ShadowDepth="3" Opacity="0.3" Color="#4FACFE"/>
+                                                </Border.Effect>
                                                 <StackPanel HorizontalAlignment="Center">
                                                     <TextBlock Text="📍"
                                                                FontSize="24"
@@ -1274,6 +1325,9 @@
                                                         <Border Background="{TemplateBinding Background}"
                                                                 CornerRadius="12"
                                                                 Padding="{TemplateBinding Padding}">
+                                                            <Border.Effect>
+                                                                <DropShadowEffect BlurRadius="8" ShadowDepth="2" Opacity="0.2" Color="#4FACFE"/>
+                                                            </Border.Effect>
                                                             <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
                                                         </Border>
                                                     </ControlTemplate>
@@ -1298,6 +1352,9 @@
                                                                     <GradientStop Color="#38F9D7" Offset="1"/>
                                                                 </LinearGradientBrush>
                                                             </Border.Background>
+                                                            <Border.Effect>
+                                                                <DropShadowEffect BlurRadius="10" ShadowDepth="3" Opacity="0.3" Color="#43E97B"/>
+                                                            </Border.Effect>
                                                             <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
                                                         </Border>
                                                     </ControlTemplate>
